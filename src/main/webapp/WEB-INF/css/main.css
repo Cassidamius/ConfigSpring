@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+.container {
+	position: relative;
+}
+
+#header .container {
+	height: 100px;
+	background: url(../images/header.png) repeat;
+	color: #fff;
+}
+
+#header .logo {
+	position: absolute;
+	background: url(../images/logo.png) 0 0 no-repeat;
+	width: 307px;
+	height: 80px;
+	line-height: 90px;
+	overflow: hidden;
+}
+
+#header .do {
+	position: absolute;
+	top: 12px;
+	right: 20px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+/* 给li元素加上一个“float:left;”属性，让每个li浮动在后面一个li的左面*/
+#header .do li {
+	float: left;
+	margin-left: 20px;
+}
+
+#header .do changestyle .btn {
+	width: 12px;
+	border: 1px solid #275E91;
+	margin-right: 3px;
+}
+
+#main {
+	padding:0;
+}
+
+#left {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 998;
+}
+
+#left .container {
+	width: 206px;
+	padding-right: 1px;
+	background: url(../images/left.png) repeat;
+}
+
+#left .navig {
+	overflow: auto;
+}
+
+#right {
+	margin-left: 207px;
+	background-color: #F8F8FF;
+}
+
+#right .container .itemTable {
+	width: 100%;
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+}
+
+#right .container .itemTable td {
+	border: 1px solid blue;
+}
+
+#right .container .itemTable tr th {
+	text-align: center;
+	border: 1px solid blue;
+}
+
+#right .container .itemTable input[type="text"] {
+	background-color: #FFC;
+	width: 50px;
+}
+
+body h1,h2 {
+	margin: 0;
+	padding:0;
+	background-color: #C6E2FF;
+}

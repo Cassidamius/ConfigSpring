@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	<definition name=".base" template="/WEB-INF/content/layout/layout.jsp">
+		<put-attribute name="top" value="/WEB-INF/content/layout/top.jsp" />
+		<put-attribute name="left" value="/WEB-INF/content/layout/left.jsp" />
+		<put-attribute name="body" value="" />
+	</definition>
+    <!-- user model start -->
+	<definition name="userList" extends=".base">
+		<put-attribute name="body" value="/WEB-INF/content/user/userList.jsp" />
+	</definition>
+	<definition name="toAddUserPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/user/addUser.jsp" />
+    </definition>
+    <definition name="toEditUserPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/user/editUser.jsp" />
+    </definition>
+    <!-- user model end -->
+    
+    <!-- customerInfo model start -->
+    <definition name="customerInfoList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/customerInfo/customerInfoList.jsp" />
+    </definition>
+    <definition name="toAddCustomerInfoPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/customerInfo/addCustomerInfo.jsp" />
+    </definition>
+    <definition name="toEditCustomerInfoPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/customerInfo/editCustomerInfo.jsp" />
+    </definition>
+    <!-- customerInfo model end -->
+    
+    <!-- company model start -->
+    <definition name="companyList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/company/companyList.jsp" />
+    </definition>
+    <definition name="toAddCompanyPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/company/addCompany.jsp" />
+    </definition>
+    <definition name="toEditCompanyPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/company/editCompany.jsp" />
+    </definition>
+    <!-- company model end -->
+    
+    <!-- project model start -->
+    <definition name="projectList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/project/projectList.jsp" />
+    </definition>
+    <definition name="toAddProjectPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/project/addProject.jsp" />
+    </definition>
+    <definition name="toEditProjectPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/project/editProject.jsp" />
+    </definition>
+    <!-- project model end -->
+    
+    <!-- brand model start -->
+    <definition name="brandList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/brand/brandList.jsp" />
+    </definition>
+    <definition name="toAddBrandPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/brand/addBrand.jsp" />
+    </definition>
+    <definition name="toEditBrandPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/brand/editBrand.jsp" />
+    </definition>
+    <!-- brand model end -->
+    
+    <!-- product model start -->
+    <definition name="productList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/product/productList.jsp" />
+    </definition>
+    <definition name="toAddProductPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/product/addProduct.jsp" />
+    </definition>
+    <definition name="toEditProductPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/product/editProduct.jsp" />
+    </definition>
+    <!-- product model end -->
+    
+    <!-- contract model start -->
+    <definition name="contractList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/contract/contractList.jsp" />
+    </definition>
+    <definition name="toAddContractPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/contract/addContract.jsp" />
+    </definition>
+    <definition name="toEditContractPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/contract/editContract.jsp" />
+    </definition>
+    <definition name="toContractDetailPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/contract/contractDetail.jsp" />
+    </definition>
+    <!-- contract model end -->
+    
+    <!-- saleOrder model start -->
+    <definition name="saleOrderList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/saleOrder/saleOrderList.jsp" />
+    </definition>
+    <definition name="toAddSaleOrderPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/saleOrder/addSaleOrder.jsp" />
+    </definition>
+    <definition name="toEditSaleOrderPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/saleOrder/editSaleOrder.jsp" />
+    </definition>
+    <definition name="toSaleOrderDetailPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/saleOrder/saleOrderDetail.jsp" />
+    </definition>
+    <!-- saleOrder model end -->
+    
+    <!-- purchaseOrder model start -->
+    <definition name="purchaseOrderList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/purchaseOrder/purchaseOrderList.jsp" />
+    </definition>
+    <definition name="toAddPurchaseOrderPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/purchaseOrder/addPurchaseOrder.jsp" />
+    </definition>
+    <definition name="toEditPurchaseOrderPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/purchaseOrder/editPurchaseOrder.jsp" />
+    </definition>
+    <!-- purchaseOrder model end -->
+    <!-- salePurchase model start -->
+    <definition name="toAddSalePurchasePage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/salePurchase/addSalePurchase.jsp" />
+    </definition>
+    <!-- salePurchase model end -->
+    
+    <!-- delivery model start -->
+    <definition name="deliveryList" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/delivery/deliveryList.jsp" />
+    </definition>
+    <definition name="toAddDeliveryPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/delivery/addDelivery.jsp" />
+    </definition>
+    <definition name="toEditDeliveryPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/delivery/editDelivery.jsp" />
+    </definition>
+    <definition name="toDeliveryDetailPage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/delivery/deliveryDetail.jsp" />
+    </definition>
+    <!-- delivery model end -->
+</tiles-definitions>

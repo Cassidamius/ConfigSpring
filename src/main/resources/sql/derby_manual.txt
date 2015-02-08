@@ -1,0 +1,11 @@
+ij
+
+connect 'jdbc:derby:d:\\derbydb\\EmbeddedDB;create=false';
+run 'D:\git\CMS\CMS\src\main\resources\sql\DDL.sql';
+run 'D:\git\CMS\CMS\src\main\resources\sql\DML.sql';
+
+describe table_name;
+
+show tables;
+
+exit;

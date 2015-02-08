@@ -1,0 +1,1 @@
+hibernate联合主键：参考UserRole.java类：定义一个包含
