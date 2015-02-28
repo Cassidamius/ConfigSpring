@@ -25,7 +25,7 @@ alter table t_resc add constraint pk_resc primary key(id);
 -- 角色
 drop table if exists t_role;
 create table t_role(
-    id int,
+    id int AUTO_INCREMENT primary key,
     name varchar(50),
     descn varchar(200),
     version int not null comment '版本',
@@ -33,7 +33,7 @@ create table t_role(
 	create_time timestamp default current_timestamp not null comment '创建时间',
 	update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '角色表';
-alter table t_role add constraint pk_role primary key(id);
+-- alter table t_role add constraint pk_role primary key(id);
 
 -- 用户
 drop table if exists t_user;
@@ -57,7 +57,7 @@ create table t_user(
  update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '用户信息表';
 
-DROP INDEX idx_t_user_name on t_user;
+-- DROP INDEX idx_t_user_name on t_user;
 CREATE UNIQUE INDEX idx_t_user_name on t_user(username);
 
 -- 资源角色映射表
@@ -77,3 +77,15 @@ create table t_user_role(
 alter table t_user_role add constraint pk_t_user_role primary key(user_id,role_id);
 -- alter table t_user_role add FOREIGN KEY fk_t_user_role_user_id (user_id) references t_user(id);
 -- alter table t_user_role add FOREIGN KEY fk_t_user_role_role_id (role_id) references t_role(id);
+
+drop table if exists t_logs;
+create table t_logs(
+id int not null AUTO_INCREMENT primary key,
+user_id int comment '操作员',
+class_name varchar(300) comment '类名',
+method_name varchar(100) comment '方法名称',
+version int not null comment '版本',
+delete_flag int default 0 not null comment '删除标记：0：正常　1：已删除',
+create_time timestamp default current_timestamp not null comment '创建时间',
+update_time timestamp default current_timestamp not null comment '更新时间'
+) comment '操作日志';

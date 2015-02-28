@@ -1,7 +1,12 @@
 package com.spring.config.initializer;
 
+import javax.servlet.Filter;
+
 import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import com.spring.config.filter.ContextFilter;
 
 /**
  * 所有实现了WebApplicationInitializer接口的类都会在容器启动时自动被加载运行，用@Order注解设定加载顺序
@@ -31,6 +36,20 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
+	}
+
+	@Override
+	protected Filter[] getServletFilters() {
+		
+		CharacterEncodingFilter cef = new CharacterEncodingFilter();
+		cef.setEncoding("utf-8");
+		// sessionStore
+		ContextFilter cf = new ContextFilter();
+		// OpenSessionInViewFilter
+//		OpenSessionInViewFilter osivf = new OpenSessionInViewFilter();
+//		osivf.setSessionFactoryBeanName("sessionFactory");
+		Filter[] filters = new Filter[] { cef, cf/*, osivf*/ };
+		return filters;
 	}
 
 }

@@ -18,7 +18,6 @@
 			<tr>
 				<td colspan="2"><input type="submit" value="提交" /></td>
 			</tr>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		</table>
 	</form:form>
 </body>

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,7 +40,7 @@ public class Role extends BaseEntity {
 	@Column(name="descn")
 	private String roleDesc;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_resc_role", joinColumns = { @JoinColumn(name = "role_id") }, 
 	inverseJoinColumns = { @JoinColumn(name = "resc_id") })
 	private Set<Resource> resources;

@@ -1,16 +1,27 @@
 package com.spring.config.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "T_RESC")
 public class Resource extends BaseEntity {
+	
+	public Resource() {
+		
+	}
+	
+	public Resource(Integer id) {
+		this.id = id;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +42,9 @@ public class Resource extends BaseEntity {
 
 	@Column(name = "descn")
 	private String descn;
+	
+	@ManyToMany(mappedBy="resources")
+	private Set<Role> roles;
 
 	public Integer getId() {
 		return id;
@@ -78,6 +92,14 @@ public class Resource extends BaseEntity {
 
 	public void setDescn(String descn) {
 		this.descn = descn;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 }

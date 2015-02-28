@@ -33,8 +33,8 @@ public class HibernateConfig {
 	@Resource(name = "dynamicDataSource")
 	private DataSource dynamicDataSource;
 
-	@Bean(name = "sessionFactory")
-	public LocalSessionFactoryBean localSessionFactoryBean() {
+	@Bean
+	public LocalSessionFactoryBean sessionFactory() {
 		logger.info("sessionFactory");
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dynamicDataSource);
@@ -55,7 +55,7 @@ public class HibernateConfig {
 	public HibernateTransactionManager hibernateTransactionManager() {
 		logger.info("transactionManager");
 		HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
-		hibernateTransactionManager.setSessionFactory(localSessionFactoryBean().getObject());
+		hibernateTransactionManager.setSessionFactory(sessionFactory().getObject());
 		return hibernateTransactionManager;
 	}
 

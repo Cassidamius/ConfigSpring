@@ -56,7 +56,7 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "mobile")
 	private String mobile;
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, 
 	inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	private List<Role> roles;

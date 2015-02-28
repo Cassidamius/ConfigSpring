@@ -8,6 +8,7 @@
 		<put-attribute name="left" value="/WEB-INF/content/layout/left.jsp" />
 		<put-attribute name="body" value="" />
 	</definition>
+	
     <!-- user model start -->
 	<definition name="userList" extends=".base">
 		<put-attribute name="body" value="/WEB-INF/content/user/userList.jsp" />
@@ -19,6 +20,30 @@
         <put-attribute name="body" value="/WEB-INF/content/user/editUser.jsp" />
     </definition>
     <!-- user model end -->
+    
+    <!-- role model start -->
+	<definition name="roleList" extends=".base">
+		<put-attribute name="body" value="/WEB-INF/content/role/roleList.jsp" />
+	</definition>
+	<definition name="toAddRolePage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/role/addRole.jsp" />
+    </definition>
+    <definition name="toEditRolePage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/role/editRole.jsp" />
+    </definition>
+    <!-- role model end -->
+    
+    <!-- resource model start -->
+	<definition name="resourceList" extends=".base">
+		<put-attribute name="body" value="/WEB-INF/content/resource/resourceList.jsp" />
+	</definition>
+	<definition name="toAddResourcePage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/resource/addResource.jsp" />
+    </definition>
+    <definition name="toEditResourcePage" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/resource/editResource.jsp" />
+    </definition>
+    <!-- resource model end -->
     
     <!-- customerInfo model start -->
     <definition name="customerInfoList" extends=".base">

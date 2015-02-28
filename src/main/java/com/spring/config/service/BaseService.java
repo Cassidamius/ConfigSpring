@@ -13,12 +13,8 @@ import java.util.List;
  */
 public interface BaseService<T extends Serializable, ID extends Serializable> {
 
-    /**
-     * 保存对象
-     */
     ID save(T t);
 
-   // @DataSourceType("master")
     void update(T t);
 
     T get(ID id);

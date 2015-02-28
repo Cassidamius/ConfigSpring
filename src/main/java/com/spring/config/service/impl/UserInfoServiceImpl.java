@@ -35,6 +35,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
     }
 
     @SuppressWarnings("unchecked")
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public List<String> getNickNameList() {
         String hql = "select nickName from UserInfo";
         List<String> list = userInfoDao.getListByHql(hql, null);
@@ -80,6 +81,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
         return sb.toString();
     }
 
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public UserInfo getUserInfo(String name, String password) {
         String hql = "from UserInfo where username = ? and password= ?";
         List<Object> objList = new ArrayList<Object>();
@@ -88,6 +90,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
         return (UserInfo) userInfoDao.getObjectByHql(hql, objList);
     }
 
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public UserInfo getUserInfo(String name) {
     	
     	Criteria c = userInfoDao.getSession().createCriteria(UserInfo.class);  
@@ -96,11 +99,6 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
         c.setFetchMode("roles", FetchMode.JOIN);  
         UserInfo ui = (UserInfo) c.uniqueResult(); 
         return ui;
-        
-//        String hql = "from UserInfo where username = ?";
-//        List<Object> objList = new ArrayList<Object>();
-//        objList.add(name);
-//        return (UserInfo) userInfoDao.getObjectByHql(hql, objList);
     }
 
 }

@@ -1,14 +1,9 @@
 package com.spring.config.initializer;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.springframework.core.annotation.Order;
-import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.util.Log4jConfigListener;
 
@@ -29,16 +24,11 @@ public class CommonInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext) throws ServletException {
 
 		// Log4jConfigListener
-		servletContext.setInitParameter("log4jConfigLocation", "classpath:config/properties/log4j.properties");
+		// servletContext.setInitParameter("log4jConfigLocation",
+		// "classpath:config/properties/log4j.properties");
+		servletContext.setInitParameter("log4jConfigLocation", "classpath:log4j.xml");
 		servletContext.addListener(Log4jConfigListener.class);
-
-		// OpenSessionInViewFilter
-		OpenSessionInViewFilter hibernateSessionInViewFilter = new OpenSessionInViewFilter();
-		FilterRegistration.Dynamic filterRegistration = servletContext.addFilter("hibernateFilter",
-		        hibernateSessionInViewFilter);
-		filterRegistration.addMappingForUrlPatterns(
-		        EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/");
-
+		
 	}
 
 }

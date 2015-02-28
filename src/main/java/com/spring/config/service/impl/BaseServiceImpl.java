@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.config.annotation.DataSourceType;
+import com.spring.config.common.Constant;
 import com.spring.config.dao.BaseDao;
 import com.spring.config.service.BaseService;
 
@@ -29,32 +30,37 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
         this.entity = entity;
     }
 
-    @DataSourceType("master")
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public void saveOrUpdate(T t) {
         getBaseDao().saveOrUpdate(t);
     }
 
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public ID save(T t) {
         return (ID) getBaseDao().save(t);
     }
 
-    @DataSourceType("master")
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public void update(T t) {
         getBaseDao().update(t);
     }
 
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public void delete(ID id) {
         getBaseDao().delete(id);
     }
     
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public void deleteObject(T t) {
         getBaseDao().deleteObject(t);
     }
 
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public T get(ID id) {
         return (T) getBaseDao().get(id);
     }
 
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public List<T> list() {
         return getBaseDao().list();
     }

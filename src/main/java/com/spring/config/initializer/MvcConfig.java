@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -36,6 +37,23 @@ import com.spring.config.interceptor.MyInitializingInterceptor;
 public class MvcConfig extends WebMvcConfigurationSupport {
 
 	private static final Logger logger = Logger.getLogger(MvcConfig.class);
+		
+	/**
+	 * 描述 : <添加拦截器>. <br>
+	 * <p>
+	 * <使用方法说明>
+	 * </p>
+	 * 
+	 * @param registry
+	 */
+	@Override
+	protected void addInterceptors(InterceptorRegistry registry) {
+		logger.info("addInterceptors start");
+		registry.addWebRequestInterceptor(new OpenSessionInViewInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(localeChangeInterceptor());
+		registry.addInterceptor(initializingInterceptor()).addPathPatterns("/**");
+		logger.info("addInterceptors end");
+	}
 
 	/**
 	 * 描述 : <注册视图处理器>. <br>
@@ -160,22 +178,6 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	//
 	// return super.requestMappingHandlerMapping();
 	// }
-
-	/**
-	 * 描述 : <添加拦截器>. <br>
-	 * <p>
-	 * <使用方法说明>
-	 * </p>
-	 * 
-	 * @param registry
-	 */
-	@Override
-	protected void addInterceptors(InterceptorRegistry registry) {
-		logger.info("addInterceptors start");
-		registry.addInterceptor(localeChangeInterceptor());
-		registry.addInterceptor(initializingInterceptor());
-		logger.info("addInterceptors end");
-	}
 
 	/**
 	 * 描述 : <HandlerMapping需要显示声明，否则不能注册资源访问处理器>. <br>

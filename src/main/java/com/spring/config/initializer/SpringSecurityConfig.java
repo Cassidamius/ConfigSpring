@@ -111,7 +111,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher("/logout");
 		lf.setLogoutRequestMatcher(logoutRequestMatcher);
 		
-		http.addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
+		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
 		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
 		        .and().formLogin().usernameParameter("userName").defaultSuccessUrl("/welcome")
 		        .and().httpBasic();

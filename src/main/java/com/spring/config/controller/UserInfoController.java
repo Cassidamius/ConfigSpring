@@ -1,5 +1,6 @@
 package com.spring.config.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,13 @@ public class UserInfoController {
 	}
 
 	@RequestMapping(value = "/addUserInfo", method = RequestMethod.POST)
-	public String addUserInfo(UserInfo userInfo, Model model) {
+	public String addUserInfo(UserInfo userInfo, Integer[] roleids, Model model) {
 		userInfo.setDeleteFlag(1);
+		List<Role> roles = new ArrayList<Role>();
+		for (Integer id : roleids) {
+			roles.add(roleService.get(id));
+		}
+		userInfo.setRoles(roles);
 		userInfoService.save(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		return "toAddUserPage";
@@ -43,7 +49,16 @@ public class UserInfoController {
 	@RequestMapping(value = "/toAddUserPage")
 	public String toAddUserPage(Model model) {
 		model.addAttribute("userInfo", new UserInfo());
+		List<Role> roles = roleService.list();
+		model.addAttribute("roles", roles);
 		return "toAddUserPage";
+	}
+	
+	@RequestMapping(value = "/toUserListPage")
+	public String toUserListPage(Model model) {
+		model.addAttribute("userInfo", new UserInfo());
+		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
+		return "userList";
 	}
 
 	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST)
@@ -56,7 +71,7 @@ public class UserInfoController {
 		return "userList";
 	}
 
-	@RequestMapping(value = "/findUserList", method = RequestMethod.POST)
+	@RequestMapping(value = "/findUserList")
 	public String findUserList(UserInfo userInfo, PageResultSet<UserInfo> pageResultSet, Model model) {
 		if (pageResultSet == null) {
 			pageResultSet = new PageResultSet<UserInfo>();

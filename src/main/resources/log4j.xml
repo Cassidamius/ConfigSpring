@@ -26,7 +26,7 @@
 	</appender>
 
 	<appender name="activexAppender" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="c:/logs/cms.log" />
+		<param name="File" value="c:/logs/configspring.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} - %m%n" />
@@ -41,7 +41,7 @@
 
 	<!-- 根logger的设置 -->
 	<root>
-		<priority value="debug" />
+		<priority value="error" />
 		<appender-ref ref="myConsole" />
 		<appender-ref ref="myFile" />
 	</root>

@@ -45,7 +45,7 @@ public class DataSourceAspect {
 			if (m != null && m.isAnnotationPresent(DataSourceType.class)) {
 				DataSourceType data = m.getAnnotation(DataSourceType.class);
 				DynamicDataSourceHolder.putDataSource(data.value());
-				System.out.println(data.value());
+				System.out.println("datasource type: " + data.value());
 			}
 
 		} catch (Exception e) {

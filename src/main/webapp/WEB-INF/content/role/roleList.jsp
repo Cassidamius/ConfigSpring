@@ -18,26 +18,24 @@ function changePage(currentPage,totalRow) {
 	$("#searchForm").submit();
 }
 
-function toAddUserPage() {
-	$("#searchForm").attr("action", "${pageContext.request.contextPath}/toAddUserPage");
+function toAddRolePage() {
+	$("#searchForm").attr("action", "${pageContext.request.contextPath}/toAddRolePage");
 	$("#searchForm").submit();
 }
 
 </script>
-<h2>用户列表</h2>
-<form id="searchForm" method="post" action="${pageContext.request.contextPath}/findUserList">
+<h2>角色列表</h2>
+<form id="searchForm" method="post" action="${pageContext.request.contextPath}/findRoleList">
 	<table>
 		<tr>
-			<td>用户名：</td>
-			<td><input type="text" id="userName" name="userName" value="${userInfo.userName}"/></td>
-			<td>昵称：</td>
-			<td><input type="text" id="nickName" name="nickName" value="${userInfo.nickName}"/></td>
+			<td>角色名：</td>
+			<td><input type="text" id="name" name="name" value="${role.name}"/></td>
 		</tr>
 		<tr>
-			<td colspan="4">
+			<td colspan="2">
 				<input type="button" value="查询" name="search" onclick="searchList();" />&nbsp;&nbsp; 
 				<input type="button" value="清空" onclick="clean();" /> &nbsp;&nbsp;
-				<input type="button" value="添加" onclick="toAddUserPage();" />
+				<input type="button" value="添加" onclick="toAddRolePage();" />
 			</td>
 		</tr>
 	</table>
@@ -51,13 +49,13 @@ function toAddUserPage() {
 <c:if test="${pageResultSet.list != null}">
 	<table border="1">
 		<tr>
-			<th>用户名</th>
-			<th>昵称</th>
+			<th>角色名</th>
+			<th>描述</th>
 		</tr>
 		<c:forEach var="item" items="${pageResultSet.list}" varStatus="statu" begin="0">
 			<tr>
-				<td>${item.userName}</td>
-				<td>${item.nickName}</td>
+				<td>${item.name}</td>
+				<td>${item.roleDesc}</td>
 			</tr>
 		</c:forEach>
 	</table>
