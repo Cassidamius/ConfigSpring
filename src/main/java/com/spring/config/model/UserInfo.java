@@ -24,9 +24,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_USER")
 public class UserInfo extends BaseEntity {
-
-	public static final String DEFAUT_PASSOWRD = "111111";
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -55,6 +53,9 @@ public class UserInfo extends BaseEntity {
 
 	@Column(name = "mobile")
 	private String mobile;
+	
+	@Column(name="status")
+	private Integer status;
 
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, 
@@ -131,6 +132,14 @@ public class UserInfo extends BaseEntity {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public List<Role> getRoles() {

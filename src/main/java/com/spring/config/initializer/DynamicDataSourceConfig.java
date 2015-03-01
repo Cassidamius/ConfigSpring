@@ -16,7 +16,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import com.spring.config.common.Constant;
 
 @Configuration
-@Import({ MasterDataSourceConfig.class, SlaveDataSourceConfig.class })
+@Import({ MasterDataSourceConfig.class, SlaveDataSourceAConfig.class, SlaveDataSourceBConfig.class })
 public class DynamicDataSourceConfig {
 
 	private static final Logger logger = Logger.getLogger(DynamicDataSourceConfig.class);
@@ -24,8 +24,11 @@ public class DynamicDataSourceConfig {
 	@Resource(name = Constant.MASTER_DATASOURCE)
 	public DataSource masterDataSource;
 
-	@Resource(name = Constant.SLAVE_DATASOURCE)
-	public DataSource slaveDataSource;
+	@Resource(name = Constant.SLAVE_DATASOURCE_A)
+	public DataSource slaveDataSourceA;
+	
+	@Resource(name = Constant.SLAVE_DATASOURCE_B)
+	public DataSource slaveDataSourceB;
 
 	@Bean(name = Constant.DYNAMIC_DATASOURCE)
 	public AbstractRoutingDataSource dynamicDataSource() {
@@ -39,7 +42,8 @@ public class DynamicDataSourceConfig {
 		ds.setDefaultTargetDataSource(masterDataSource);
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
 		targetDataSources.put(Constant.MASTER_DATASOURCE_KEY, masterDataSource);
-		targetDataSources.put(Constant.SLAVE_DATASOURCE_KEY, slaveDataSource);
+		targetDataSources.put(Constant.SLAVE_DATASOURCE_KEY_A, slaveDataSourceA);
+		targetDataSources.put(Constant.SLAVE_DATASOURCE_KEY_B, slaveDataSourceB);
 		ds.setTargetDataSources(targetDataSources);
 		return ds;
 	}

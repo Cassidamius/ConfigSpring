@@ -31,9 +31,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 @Configuration
 //加载资源文件
-@PropertySource({"classpath:/config/properties/sdb.properties"})
-public class SlaveDataSourceConfig {
-	private static final Logger logger = Logger.getLogger(SlaveDataSourceConfig.class);
+@PropertySource({"classpath:/config/properties/sdba.properties"})
+public class SlaveDataSourceAConfig {
+	private static final Logger logger = Logger.getLogger(SlaveDataSourceAConfig.class);
 	/**
 	 * 绑定资源属性
 	 */
@@ -46,9 +46,9 @@ public class SlaveDataSourceConfig {
 	@Value("${jdbc.password}")
 	String passWord;
 	
-	@Bean(name = "slaveDataSource")
-	public DataSource slaveDataSource() {
-		logger.info("SlaveDataSource");
+	@Bean(name = "slaveDataSourceA")
+	public DataSource slaveDataSourceA() {
+		logger.info("SlaveDataSourceA");
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(driverClass);
 		dataSource.setUrl(url);

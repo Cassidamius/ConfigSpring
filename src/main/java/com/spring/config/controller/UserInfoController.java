@@ -16,6 +16,7 @@ import com.spring.config.model.UserInfo;
 import com.spring.config.pagination.PageResultSet;
 import com.spring.config.service.RoleService;
 import com.spring.config.service.UserInfoService;
+import com.spring.config.util.MD5Util;
 
 @Controller
 @Scope("prototype")
@@ -40,7 +41,10 @@ public class UserInfoController {
 		for (Integer id : roleids) {
 			roles.add(roleService.get(id));
 		}
+		userInfo.setPassword(MD5Util.MD5(userInfo.getUserName()));
 		userInfo.setRoles(roles);
+		userInfo.setDeleteFlag(0);
+		userInfo.setStatus(1);
 		userInfoService.save(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		return "toAddUserPage";
