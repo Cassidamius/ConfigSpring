@@ -18,6 +18,9 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,9 +72,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		String usersByUsernameQuery = "select username, password, status as enabled from t_user " + " where username=?";
 		auth.jdbcAuthentication().authoritiesByUsernameQuery(authoritiesByUsernameQuery)
 		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource)
-		        .passwordEncoder(new Md5PasswordEncoder());
+		        /*.passwordEncoder(new Md5PasswordEncoder())*/;
+		
 	}
-
+	
 	@Bean
 	public AuthenticationEntryPoint authenticationEntryPoint() {
 		return new LoginUrlAuthenticationEntryPoint("/WEB-INF/content/login.jsp");
@@ -114,7 +118,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
 		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
 		        .and().formLogin().usernameParameter("userName").defaultSuccessUrl("/welcome")
-		        .and().httpBasic();
+		        .and().httpBasic().and().authenticationProvider(authenticationProvider());
+	}
+	
+	/**
+	 * md5加密，用户名作为盐值
+	 * 
+	 * @return
+	 */
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
+		dap.setUserDetailsService(userDetailsService());
+		dap.setPasswordEncoder(new Md5PasswordEncoder());
+		ReflectionSaltSource saltSource = new ReflectionSaltSource();
+		saltSource.setUserPropertyToUse("username");
+		dap.setSaltSource(saltSource);
+		return dap;
 	}
 
 	public FilterInvocationSecurityMetadataSource fsiMetadataSource() {

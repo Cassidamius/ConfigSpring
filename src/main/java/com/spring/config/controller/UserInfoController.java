@@ -58,6 +58,20 @@ public class UserInfoController {
 		return "toAddUserPage";
 	}
 	
+	@RequestMapping(value = "/toEditUserPage")
+	public String toEditUserPage( @RequestParam("id") Integer id, Model model) {
+		UserInfo userInfo = userInfoService.get(id);
+		model.addAttribute("userInfo", userInfo);
+		return "toEditUserPage";
+	}
+	
+	@RequestMapping(value = "/deleteUser")
+	public String deleteUser(@RequestParam("id") Integer id, Model model) {
+		userInfoService.delete(id);
+		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
+		return "userList";
+	}
+	
 	@RequestMapping(value = "/toUserListPage")
 	public String toUserListPage(Model model) {
 		model.addAttribute("userInfo", new UserInfo());
@@ -74,7 +88,7 @@ public class UserInfoController {
 		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
 		return "userList";
 	}
-
+	
 	@RequestMapping(value = "/findUserList")
 	public String findUserList(UserInfo userInfo, PageResultSet<UserInfo> pageResultSet, Model model) {
 		if (pageResultSet == null) {

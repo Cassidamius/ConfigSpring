@@ -31,7 +31,7 @@ public class MD5Util {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(MD5Util.MD5("admin"));
+		System.out.println(MD5Util.MD5("admin{admin}"));
 		System.out.println(MD5Util.MD5("user"));
 		System.out.println(MD5Util.MD5("anonymous"));
 	}
