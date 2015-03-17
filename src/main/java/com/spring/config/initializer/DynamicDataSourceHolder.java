@@ -2,9 +2,14 @@ package com.spring.config.initializer;
 
 import com.spring.config.common.Constant;
 
-public class DynamicDataSourceHolder {
+public final class DynamicDataSourceHolder {
+	
+	/**
+	 * 读库个数
+	 */
+	private static final Integer SLAVE_COUNTS = 2;
 
-	public static final ThreadLocal<String> holder = new ThreadLocal<String>();
+	private static final ThreadLocal<String> holder = new ThreadLocal<String>();
 
 	/**
 	 * 随机选择读库
@@ -13,9 +18,8 @@ public class DynamicDataSourceHolder {
 	public static void putDataSource(String name) {
 		String real_ds_name = name;
 		if (name.startsWith(Constant.SLAVE_DATASOURCE_KEY)) {
-			int index = (int) (Math.round(Math.random() * 10) % Constant.SLAVE_DATASOURCE_COUNT);
-			String suffix = String.valueOf(Constant.SLAVE_DATASOURCE_SUFFIX.charAt(index));
-			real_ds_name += suffix;
+			int index = (int) (Math.round(Math.random() * 10) % SLAVE_COUNTS);
+			real_ds_name += index;
 		}
 		holder.set(real_ds_name);
 	}

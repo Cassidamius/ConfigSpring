@@ -64,6 +64,34 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/css/**", "/images/**", "/js/**");
 	}
+	
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+
+		ExceptionTranslationFilter etf = new ExceptionTranslationFilter(authenticationEntryPoint());
+		etf.setAccessDeniedHandler(accessDeniedHandler());
+
+		FilterSecurityInterceptor fsi = new FilterSecurityInterceptor();
+		fsi.setSecurityMetadataSource(fsiMetadataSource());
+		fsi.setAccessDecisionManager(accessDecisionManager());
+
+		ChannelProcessingFilter cpf = new ChannelProcessingFilter();
+		cpf.setChannelDecisionManager(channelDecisionManager());
+		cpf.setSecurityMetadataSource(cpfMetadataSource());
+		
+		SimpleUrlLogoutSuccessHandler slsh = new SimpleUrlLogoutSuccessHandler();
+//		slsh.setDefaultTargetUrl("/login");
+		SecurityContextLogoutHandler sclh = new SecurityContextLogoutHandler();
+		
+		LogoutFilter lf = new LogoutFilter(slsh, sclh);
+		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher("/logout");
+		lf.setLogoutRequestMatcher(logoutRequestMatcher);
+		
+		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
+		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
+		        .and().formLogin().usernameParameter("userName").defaultSuccessUrl("/welcome")
+		        .and().httpBasic().and().authenticationProvider(authenticationProvider());
+	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -93,34 +121,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return accessDeniedHandler;
 	}
 
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-
-		ExceptionTranslationFilter etf = new ExceptionTranslationFilter(authenticationEntryPoint());
-		etf.setAccessDeniedHandler(accessDeniedHandler());
-
-		FilterSecurityInterceptor fsi = new FilterSecurityInterceptor();
-		fsi.setSecurityMetadataSource(fsiMetadataSource());
-		fsi.setAccessDecisionManager(accessDecisionManager());
-
-		ChannelProcessingFilter cpf = new ChannelProcessingFilter();
-		cpf.setChannelDecisionManager(channelDecisionManager());
-		cpf.setSecurityMetadataSource(cpfMetadataSource());
-		
-		SimpleUrlLogoutSuccessHandler slsh = new SimpleUrlLogoutSuccessHandler();
-//		slsh.setDefaultTargetUrl("/login");
-		SecurityContextLogoutHandler sclh = new SecurityContextLogoutHandler();
-		
-		LogoutFilter lf = new LogoutFilter(slsh, sclh);
-		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher("/logout");
-		lf.setLogoutRequestMatcher(logoutRequestMatcher);
-		
-		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
-		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
-		        .and().formLogin().usernameParameter("userName").defaultSuccessUrl("/welcome")
-		        .and().httpBasic().and().authenticationProvider(authenticationProvider());
-	}
-	
 	/**
 	 * md5加密，用户名作为盐值
 	 * 

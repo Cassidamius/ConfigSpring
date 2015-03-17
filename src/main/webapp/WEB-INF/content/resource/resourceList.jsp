@@ -2,28 +2,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <script language="javascript" type="text/javascript" src="js/jquery/jquery-1.10.1.min.js"></script>
-<script>
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
 
-function searchList() {
-	$("#searchForm").submit();
-}
-
-function changePage(currentPage,totalRow) {
-	//alert("currentPage:" + $("#currentPage").val());
-	$("#currentPage").val(currentPage);
-	$("#pageSize").val($("#pageSizeSelect option:selected").val());
-	$("#totalRow").val(totalRow);
-	//alert("currentPage:" + $("#currentPage").val());
-	$("#searchForm").attr("method", "post");
-	$("#searchForm").submit();
-}
-
-function toAddRescPage() {
-	$("#searchForm").attr("action", "${pageContext.request.contextPath}/toAddResourcePage");
-	$("#searchForm").submit();
-}
-
-</script>
 <h2>资源列表</h2>
 <form id="searchForm" method="post" action="${pageContext.request.contextPath}/findResourceList">
 	<table>
@@ -35,7 +15,7 @@ function toAddRescPage() {
 			<td colspan="2">
 				<input type="button" value="查询" name="search" onclick="searchList();" />&nbsp;&nbsp; 
 				<input type="button" value="清空" onclick="clean();" /> &nbsp;&nbsp;
-				<input type="button" value="添加" onclick="toAddRescPage();" />
+				<input type="button" value="添加" onclick="toAddPage('/toAddResourcePage');" />
 			</td>
 		</tr>
 	</table>

@@ -16,24 +16,30 @@ public class ResourceController {
 
 	@Autowired
 	private ResourceService resourcesService;
-	
+
 	@RequestMapping(value = "/toResourceListPage")
 	public String toResourceListPage(Model model) {
 		model.addAttribute("resource", new Resource());
 		model.addAttribute("pageResultSet", new PageResultSet<Resource>());
 		return "resourceList";
 	}
-	
+
 	@RequestMapping(value = "/findResourceList")
 	public String findUserList(Resource resource, PageResultSet<Resource> pageResultSet, Model model) {
 		if (pageResultSet == null) {
 			pageResultSet = new PageResultSet<Resource>();
 		}
 		model.addAttribute("resource", resource);
-		pageResultSet = resourcesService.queryForPage(resource, pageResultSet.getPageInfo().getPageSize(), pageResultSet
-		        .getPageInfo().getCurrentPage());
+		pageResultSet = resourcesService.queryForPage(resource, pageResultSet.getPageInfo().getPageSize(),
+		        pageResultSet.getPageInfo().getCurrentPage());
 		model.addAttribute("pageResultSet", pageResultSet);
 		return "resourceList";
 	}
-	
+
+	@RequestMapping(value = "/toAddResourcePage")
+	public String toAddUserPage(Model model) {
+		model.addAttribute("resource", new Resource());
+		return "toAddResourcePage";
+	}
+
 }
