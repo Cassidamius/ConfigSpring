@@ -21,7 +21,7 @@ function changePage(currentPage,totalRow) {
 }
 
 function toAddPage(url) {
-	$("#searchForm").attr("action", "${pageContext.request.contextPath}" + url);
+	$("#searchForm").attr("action", url);
 	$("#searchForm").submit();
 }
 

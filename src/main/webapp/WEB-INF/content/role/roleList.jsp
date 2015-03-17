@@ -18,11 +18,6 @@ function changePage(currentPage,totalRow) {
 	$("#searchForm").submit();
 }
 
-function toAddRolePage() {
-	$("#searchForm").attr("action", "${pageContext.request.contextPath}/toAddRolePage");
-	$("#searchForm").submit();
-}
-
 </script>
 <h2>角色列表</h2>
 <form id="searchForm" method="post" action="${pageContext.request.contextPath}/findRoleList">
@@ -35,7 +30,7 @@ function toAddRolePage() {
 			<td colspan="2">
 				<input type="button" value="查询" name="search" onclick="searchList();" />&nbsp;&nbsp; 
 				<input type="button" value="清空" onclick="clean();" /> &nbsp;&nbsp;
-				<input type="button" value="添加" onclick="toAddRolePage();" />
+				<input type="button" value="添加" onclick="toAddPage('${pageContext.request.contextPath}/toAddRolePage');" />
 			</td>
 		</tr>
 	</table>
