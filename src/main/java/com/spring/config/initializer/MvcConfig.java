@@ -66,7 +66,7 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	@Bean
 	public ViewResolver jspViewResolver() {
 		logger.info("jspViewResolver");
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
 		viewResolver.setViewClass(JstlView.class);
 		viewResolver.setPrefix("/WEB-INF/content/");
 		viewResolver.setSuffix(".jsp");

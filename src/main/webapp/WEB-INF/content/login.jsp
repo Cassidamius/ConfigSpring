@@ -5,6 +5,7 @@
 <title>登录</title>
 </head>
 <body>
+<span style="color:red">${error}</span>
 	<form:form commandName="userInfo" method="post" action="${pageContext.request.contextPath}/login">
 		<table>
 			<tr>

@@ -42,11 +42,11 @@
 			<tr>
 				<td><input type="button" name="modify" value="修改" onclick="toEditPage('${pageContext.request.contextPath}/toEditUserPage', '${item.id}');"/>&nbsp;&nbsp;
 				<input type="button" name="delete" value="删除" onclick="deleteItem('${pageContext.request.contextPath}/deleteUser', '${item.id}');"/></td>
-				<td>${item.userName}</td>
-				<td>${item.nickName}</td>
-				<td>${item.mobile}</td>
-				<td>${item.telephone}</td>
-				<td>${item.address}</td>
+				<td><c:out value="${item.userName}" /></td>
+				<td><c:out value="${item.nickName}" /></td>
+				<td><c:out value="${item.mobile}" /></td>
+				<td><c:out value="${item.telephone}" /></td>
+				<td><c:out value="${item.address}" /></td>
 			</tr>
 		</c:forEach>
 	</table>

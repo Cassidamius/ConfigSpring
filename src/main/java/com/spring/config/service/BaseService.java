@@ -3,6 +3,8 @@ package com.spring.config.service;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 /**
  * 基础服务
  * 
@@ -11,7 +13,7 @@ import java.util.List;
  * @param <T>
  * @param <ID>
  */
-public interface BaseService<T extends Serializable, ID extends Serializable> {
+public interface BaseService<T extends Serializable, ID extends Serializable> extends UserDetailsService {
 
     ID save(T t);
 

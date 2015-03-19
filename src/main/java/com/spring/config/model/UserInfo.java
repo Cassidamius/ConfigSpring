@@ -1,5 +1,7 @@
 package com.spring.config.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 用户
@@ -23,8 +30,8 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "T_USER")
-public class UserInfo extends BaseEntity {
-	
+public class UserInfo extends BaseEntity implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -53,13 +60,12 @@ public class UserInfo extends BaseEntity {
 
 	@Column(name = "mobile")
 	private String mobile;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Integer status;
 
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, 
-	inverseJoinColumns = { @JoinColumn(name = "role_id") })
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	private List<Role> roles;
 
 	public Integer getId() {
@@ -148,6 +154,50 @@ public class UserInfo extends BaseEntity {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	@Override
+	@Transient
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		if (roles != null) {
+			authorities.clear();
+			for (Role role : roles) {
+				SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
+				authorities.add(authority);
+			}
+		}
+		return authorities;
+	}
+
+	@Override
+	@Transient
+	public String getUsername() {
+		return this.userName;
+	}
+
+	@Override
+	@Transient
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isEnabled() {
+		return true;
 	}
 
 }

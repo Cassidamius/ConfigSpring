@@ -1,6 +1,8 @@
 package com.spring.config.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.spring.config.annotation.DataSourceType;
 import com.spring.config.common.Constant;
 import com.spring.config.dao.RoleDao;
+import com.spring.config.model.Resource;
 import com.spring.config.model.Role;
 import com.spring.config.pagination.PageInfo;
 import com.spring.config.pagination.PageResultSet;
@@ -71,6 +74,16 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Integer> implements R
         
         c.setFetchMode("resources", FetchMode.JOIN);  
         Role role = (Role) c.uniqueResult();
+       Collections.sort(role.getResources(), new Comparator<Resource>() {
+
+		@Override
+        public int compare(Resource o1, Resource o2) {
+	        String n1 = o1.getName();
+	        String n2 = o2.getName();
+	        return n1.compareTo(n2);
+        }
+    	   
+       });
         return role;
     }
 	

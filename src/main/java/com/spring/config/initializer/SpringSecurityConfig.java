@@ -56,7 +56,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Resource(name = "dynamicDataSource")
 	private DataSource dynamicDataSource;
-	
+
 	/**
 	 * 设置不拦截规则
 	 */
@@ -64,7 +64,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/css/**", "/images/**", "/js/**");
 	}
-	
+
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 
@@ -78,18 +78,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		ChannelProcessingFilter cpf = new ChannelProcessingFilter();
 		cpf.setChannelDecisionManager(channelDecisionManager());
 		cpf.setSecurityMetadataSource(cpfMetadataSource());
-		
+
 		SimpleUrlLogoutSuccessHandler slsh = new SimpleUrlLogoutSuccessHandler();
-//		slsh.setDefaultTargetUrl("/login");
 		SecurityContextLogoutHandler sclh = new SecurityContextLogoutHandler();
-		
+
 		LogoutFilter lf = new LogoutFilter(slsh, sclh);
 		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher("/logout");
 		lf.setLogoutRequestMatcher(logoutRequestMatcher);
-		
-		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class).addFilterAfter(fsi, FilterSecurityInterceptor.class).addFilterBefore(etf, ExceptionTranslationFilter.class)
+
+		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class)
+		        .addFilterAfter(fsi, FilterSecurityInterceptor.class)
 		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
-		        .and().formLogin().usernameParameter("userName").defaultSuccessUrl("/welcome")
+		        .and().formLogin().loginPage("/login").usernameParameter("userName").defaultSuccessUrl("/welcome")
 		        .and().httpBasic().and().authenticationProvider(authenticationProvider());
 	}
 
@@ -99,14 +99,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		        + " join t_user_role ur on u.id=ur.user_id join t_role r on r.id=ur.role_id " + " where u.username=?";
 		String usersByUsernameQuery = "select username, password, status as enabled from t_user " + " where username=?";
 		auth.jdbcAuthentication().authoritiesByUsernameQuery(authoritiesByUsernameQuery)
-		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource)
-		        /*.passwordEncoder(new Md5PasswordEncoder())*/;
-		
+		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource);
+
 	}
-	
+
 	@Bean
 	public AuthenticationEntryPoint authenticationEntryPoint() {
-		return new LoginUrlAuthenticationEntryPoint("/WEB-INF/content/login.jsp");
+		return new LoginUrlAuthenticationEntryPoint("/login");
 	}
 
 	/**

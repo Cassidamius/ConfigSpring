@@ -1,8 +1,7 @@
 package com.spring.config.controller;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -57,7 +56,7 @@ public class RoleController {
 	@RequestMapping(value = "/addRole", method = RequestMethod.POST)
 	public String addRole(Role role, Integer[] resourceids, Model model) {
 		role.setDeleteFlag(1);
-		Set<Resource> resources = new HashSet<Resource>();
+		List<Resource> resources = new ArrayList<Resource>();
 		for (Integer id : resourceids) {
 			resources.add(resourceService.get(id));
 		}

@@ -1,6 +1,6 @@
 package com.spring.config.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,7 +43,7 @@ public class Role extends BaseEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_resc_role", joinColumns = { @JoinColumn(name = "role_id") }, 
 	inverseJoinColumns = { @JoinColumn(name = "resc_id") })
-	private Set<Resource> resources;
+	private List<Resource> resources;
 
 	public Integer getId() {
 		return id;
@@ -69,11 +69,11 @@ public class Role extends BaseEntity {
 		this.roleDesc = roleDesc;
 	}
 
-	public Set<Resource> getResources() {
+	public List<Resource> getResources() {
 		return resources;
 	}
 
-	public void setResources(Set<Resource> resources) {
+	public void setResources(List<Resource> resources) {
 		this.resources = resources;
 	}
 	

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.config.annotation.DataSourceType;
@@ -84,6 +86,12 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
             }
         }
         return baseDao;
+    }
+
+	@Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	    // TODO Auto-generated method stub
+	    return null;
     }
     
 }

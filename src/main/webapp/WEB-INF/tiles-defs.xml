@@ -8,7 +8,6 @@
 		<put-attribute name="left" value="/WEB-INF/content/layout/left.jsp" />
 		<put-attribute name="body" value="" />
 	</definition>
-	
     <!-- user model start -->
 	<definition name="userList" extends=".base">
 		<put-attribute name="body" value="/WEB-INF/content/user/userList.jsp" />

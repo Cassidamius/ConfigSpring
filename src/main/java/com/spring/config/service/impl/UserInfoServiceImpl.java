@@ -8,6 +8,9 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.spring.config.annotation.DataSourceType;
@@ -25,7 +28,7 @@ import com.spring.config.service.UserInfoService;
  * 
  */
 @Service("userInfoService")
-public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements UserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements UserDetailsService, UserInfoService {
 
     @Autowired
     private UserInfoDao userInfoDao;
@@ -99,6 +102,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
         c.setFetchMode("roles", FetchMode.JOIN);  
         UserInfo ui = (UserInfo) c.uniqueResult(); 
         return ui;
+    }
+
+	@Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return getUserInfo(username);
     }
 
 }
