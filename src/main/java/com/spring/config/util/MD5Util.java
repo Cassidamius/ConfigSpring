@@ -31,7 +31,8 @@ public class MD5Util {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(MD5Util.MD5("admin{admin}"));
+		System.out.println(java.util.UUID.randomUUID());
+		System.out.println(MD5Util.MD5("admin{0e4c627b-aab2-4c8f-9b68-cfd386bd0a27}"));
 		System.out.println(MD5Util.MD5("user"));
 		System.out.println(MD5Util.MD5("anonymous{anonymous}"));
 	}

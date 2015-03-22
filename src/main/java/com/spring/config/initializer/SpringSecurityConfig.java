@@ -29,11 +29,11 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -59,39 +59,41 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.spring.config.service.impl.UserInfoServiceImpl;
+
 @Configuration
 @EnableWebMvcSecurity
 @Import({ DynamicDataSourceConfig.class })
 @PropertySource({ "classpath:/config/properties/springSecurityConfig.properties" })
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
 	@Value("${login.url}")
-	String loginUrl;
+	private String loginUrl;
 
 	@Value("${login.logout.url}")
-	String logoutUrl;
+	private String logoutUrl;
 
 	@Value("${login.username}")
-	String userName;
+	private String userName;
 
 	@Value("${login.password}")
-	String password;
+	private String password;
 
 	@Value("${login.success.url}")
-	String successUrl;
+	private String successUrl;
 
 	@Value("${login.error.url}")
-	String errorUrl;
+	private String errorUrl;
 
 	@Resource(name = "dynamicDataSource")
 	private DataSource dynamicDataSource;
 
-	String authoritiesByUsernameQuery = "select u.username,r.name as authority from t_user u "
+	private String authoritiesByUsernameQuery = "select u.username,r.name as authority from t_user u "
 	        + " join t_user_role ur on u.id=ur.user_id join t_role r on r.id=ur.role_id " + " where u.username=?";
 
-	String usersByUsernameQuery = "select username, password, status as enabled from t_user " + " where username=?";
+	private String usersByUsernameQuery = "select username, password, delete_flag as enabled from t_user " + " where username=?";
 
-	String resourceQuery = "select re.resc_string, r.name from t_role r join t_resc_role rr "
+	private String resourceQuery = "select re.resc_string, r.name from t_role r join t_resc_role rr "
 	        + " on r.id = rr.role_id join t_resc re on re.id = rr.resc_id order by re.priority";
 
 	/**
@@ -119,12 +121,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		SimpleUrlLogoutSuccessHandler slsh = new SimpleUrlLogoutSuccessHandler();
 		slsh.setDefaultTargetUrl(loginUrl);
 		SecurityContextLogoutHandler sclh = new SecurityContextLogoutHandler();
+		sclh.setClearAuthentication(true);
 
-		 LogoutFilter lf = new LogoutFilter(slsh, sclh);
-		 RequestMatcher logoutRequestMatcher = new
-		 AntPathRequestMatcher(logoutUrl, HttpMethod.GET);
-		 lf.setLogoutRequestMatcher(logoutRequestMatcher);
-		 
+		LogoutFilter lf = new LogoutFilter(slsh, sclh);
+		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher(logoutUrl, HttpMethod.GET);
+		lf.setLogoutRequestMatcher(logoutRequestMatcher);
+
+		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
+		        .addFilterAfter(lf, LogoutFilter.class)
+		        .addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+		        .addFilter(fsi).addFilter(cpf).authorizeRequests().anyRequest().authenticated().and().httpBasic();
+	}
+
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.jdbcAuthentication().authoritiesByUsernameQuery(authoritiesByUsernameQuery)
+//		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource);
+//	}
+
+	public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() {
 		MyUsernamePasswordAuthenticationFilter upaf = new MyUsernamePasswordAuthenticationFilter();
 		upaf.setAuthenticationManager(providerManager());
 
@@ -134,23 +149,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		upaf.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(errorUrl));
 		upaf.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(loginUrl, HttpMethod.POST));
 
-		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
-		.addFilterAfter(lf, LogoutFilter.class)
-		        .addFilterBefore(upaf, UsernamePasswordAuthenticationFilter.class).addFilter(fsi).addFilter(cpf)
-		        .authorizeRequests().anyRequest().authenticated().and().httpBasic();
-	}
-
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().authoritiesByUsernameQuery(authoritiesByUsernameQuery)
-		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource);
-	}
-
-	@Bean
-	public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() {
-		UsernamePasswordAuthenticationFilter upaf = new UsernamePasswordAuthenticationFilter();
-		upaf.setAuthenticationManager(providerManager());
-		upaf.setUsernameParameter(userName);
 		return upaf;
 	}
 
@@ -182,9 +180,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		dap.setHideUserNotFoundExceptions(false);
 		dap.setPasswordEncoder(new Md5PasswordEncoder());
 		ReflectionSaltSource saltSource = new ReflectionSaltSource();
-		saltSource.setUserPropertyToUse("username");
+		saltSource.setUserPropertyToUse("salt");
 		dap.setSaltSource(saltSource);
 		return dap;
+	}
+	
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new UserInfoServiceImpl();
 	}
 
 	public AuthenticationProvider anonymousAuthenticationProvider() {

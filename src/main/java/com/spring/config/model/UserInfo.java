@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "T_USER")
+@DynamicUpdate
 public class UserInfo extends BaseEntity implements UserDetails {
 
 	@Id
@@ -61,8 +63,11 @@ public class UserInfo extends BaseEntity implements UserDetails {
 	@Column(name = "mobile")
 	private String mobile;
 
-	@Column(name = "status")
-	private Integer status;
+	@Column(name = "salt")
+	private String salt;
+	
+	@Column(name="descn")
+	private String descn;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
@@ -140,12 +145,12 @@ public class UserInfo extends BaseEntity implements UserDetails {
 		this.mobile = mobile;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public String getSalt() {
+		return salt;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public List<Role> getRoles() {
@@ -154,6 +159,14 @@ public class UserInfo extends BaseEntity implements UserDetails {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getDescn() {
+		return descn;
+	}
+
+	public void setDescn(String descn) {
+		this.descn = descn;
 	}
 
 	@Override

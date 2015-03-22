@@ -22,12 +22,12 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Class[] getRootConfigClasses() {
-		return null;
+		return new Class[] { AppConfig.class, SpringSecurityConfig.class };
 	}
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { MvcConfig.class, AppConfig.class };
+		return new Class[] { MvcConfig.class};
 	}
 
 	/**
@@ -42,7 +42,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	protected Filter[] getServletFilters() {
 		
 		CharacterEncodingFilter cef = new CharacterEncodingFilter();
-		cef.setEncoding("utf-8");
+		cef.setEncoding("UTF-8");
+		cef.setForceEncoding(true);
 		// sessionStore
 		ContextFilter cf = new ContextFilter();
 		// OpenSessionInViewFilter

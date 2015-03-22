@@ -49,10 +49,10 @@ create table t_user(
  address varchar(1000) comment '地址',
  telephone varchar(20) comment '电话',
  password varchar(32) comment '密码',
- status int comment '状态',
+ salt char(36) comment '盐值：由java.util.UUID.randomUUID()生成',
  descn varchar(200) comment '描述',
  version int not null comment '版本',
- delete_flag int default 0 not null comment '删除标记：0：正常　1：已删除',
+ delete_flag int default 0 not null comment '删除标记：1：正常　0：已删除',
  create_time timestamp default current_timestamp not null comment '创建时间',
  update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '用户信息表';

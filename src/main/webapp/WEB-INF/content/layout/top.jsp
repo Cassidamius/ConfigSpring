@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <h1 class="logo">测试系统</h1>
 <ul class="do">
   <li>欢迎<span id="top-nickName"><a href="getUserInfo?id=${sessionUserInfo.id}">${sessionUserInfo.userName}</a></span></li>

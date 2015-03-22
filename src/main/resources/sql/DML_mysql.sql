@@ -1,5 +1,5 @@
 delete from t_user;
-insert into t_user(id,username,password,status,descn, version) values(1,'admin','ceb4f32325eda6142bd65215f4c0f371',1,'管理员',1); -- password: admin solt:admin
+insert into t_user(id,username,password,delete_flag,descn,version,salt) values(1,'admin','ae206bc02e8c6955cb578e151d5b956e',1,'管理员',1,'0e4c627b-aab2-4c8f-9b68-cfd386bd0a27'); -- password: admin
 
 delete from t_role;
 insert into t_role(id,name,descn,version) values(1,'ROLE_ADMIN','管理员角色',1);
@@ -26,4 +26,3 @@ insert into t_resc_role(resc_id,role_id) values(7,2);
 
 delete from t_user_role;
 insert into t_user_role(user_id,role_id) values(1,1);
-          

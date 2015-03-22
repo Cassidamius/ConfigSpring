@@ -2,8 +2,6 @@ package com.spring.config.service;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.spring.config.annotation.DataSourceType;
 import com.spring.config.model.UserInfo;
 
@@ -21,7 +19,7 @@ public interface UserInfoService extends PageService<UserInfo, Integer> {
     UserInfo getUserInfo(String name);
 
     List<String> getNickNameList();
-
-	UserDetails loadUserByUsername(String userName);
+    
+    void updateUserInfo(UserInfo userInfo);
     
 }

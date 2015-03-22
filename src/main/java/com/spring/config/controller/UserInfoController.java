@@ -1,7 +1,11 @@
 package com.spring.config.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -41,10 +45,12 @@ public class UserInfoController {
 		for (Integer id : roleids) {
 			roles.add(roleService.get(id));
 		}
-		userInfo.setPassword(MD5Util.MD5(userInfo.getUserName()));
+		String salt = UUID.randomUUID().toString();
+		userInfo.setSalt(salt);
+		userInfo.setPassword(MD5Util.MD5(userInfo.getPassword() + "{" + salt + "}"));
 		userInfo.setRoles(roles);
 		userInfo.setDeleteFlag(0);
-		userInfo.setStatus(1);
+		
 		userInfoService.save(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		return "toAddUserPage";
@@ -80,10 +86,12 @@ public class UserInfoController {
 	}
 
 	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST)
-	public String editUser(UserInfo userInfo, Model model) {
+	public String editUser(HttpServletRequest request, UserInfo userInfo, Model model) throws UnsupportedEncodingException {
+//		UserInfo user = (UserInfo)request.getp
 		List<Role> roleList = roleService.getRoleSetByUserId(userInfo.getId());
 		userInfo.setRoles(roleList);
-		userInfoService.update(userInfo);
+		userInfo.setAddress(new String(userInfo.getAddress().getBytes("iso-8859-1"), "utf-8"));
+		userInfoService.updateUserInfo(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
 		return "userList";

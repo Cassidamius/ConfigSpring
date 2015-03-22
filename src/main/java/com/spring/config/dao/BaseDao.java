@@ -14,6 +14,8 @@ import org.hibernate.Session;
 public interface BaseDao<T, ID> {
 
     T get(ID id);
+    
+    T load(ID id);
 
     Object getObjectByHql(String hql, List<Object> args);
     
@@ -30,6 +32,8 @@ public interface BaseDao<T, ID> {
     ID save(T t);
 
     void saveOrUpdate(T t);
+    
+    void update(String hql, List<Object> objList);
 
     void delete(ID id);
 

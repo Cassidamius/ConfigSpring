@@ -1,4 +1,4 @@
-<%@page language="java" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 共${pageResultSet.pageInfo.totalRow}条，共${pageResultSet.pageInfo.totalPage}页；当前第${pageResultSet.pageInfo.currentPage}页；每页显示：
 	<select id="pageSizeSelect">
 	<option value="10" <c:if test="${pageResultSet.pageInfo.pageSize == 10}">selected</c:if>>10</option>

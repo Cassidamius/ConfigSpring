@@ -28,85 +28,98 @@ import com.spring.config.service.UserInfoService;
  * 
  */
 @Service("userInfoService")
-public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements UserDetailsService, UserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements UserDetailsService,
+        UserInfoService {
 
-    @Autowired
-    private UserInfoDao userInfoDao;
+	@Autowired
+	private UserInfoDao userInfoDao;
 
-    public UserInfoServiceImpl() {
-        super(UserInfo.class);
-    }
+	public UserInfoServiceImpl() {
+		super(UserInfo.class);
+	}
 
-    @SuppressWarnings("unchecked")
-    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-    public List<String> getNickNameList() {
-        String hql = "select nickName from UserInfo";
-        List<String> list = userInfoDao.getListByHql(hql, null);
-        return list;
-    }
+	@SuppressWarnings("unchecked")
+	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
+	public List<String> getNickNameList() {
+		String hql = "select nickName from UserInfo";
+		List<String> list = userInfoDao.getListByHql(hql, null);
+		return list;
+	}
 
-    @Override
-    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-    public PageResultSet<UserInfo> queryForPage(UserInfo user, int pageSize, int currentPage) {
-        String hql = "SELECT count(id) FROM UserInfo ui where 1 = 1 ";
-        List<Object> objList = new ArrayList<Object>();
-        int totalRow = userInfoDao.queryRowCount(createHql(hql, user, objList), objList);
-        List<UserInfo> users = null;
-        PageInfo pageInfo = new PageInfo(totalRow, pageSize, currentPage);
-        if (totalRow == 0) {
-            users = new ArrayList<UserInfo>();
-        } else {
-            hql = "FROM UserInfo ui where 1 = 1 ";
-            objList.clear();
-            users = userInfoDao.queryForPage(createHql(hql, user, objList), objList, pageInfo.countOffset(),
-                    pageInfo.getPageSize());
-        }
-
-        return new PageResultSet<UserInfo>(pageInfo, users);
-    }
-
-    private String createHql(String hql, UserInfo userInfo, List<Object> objList) {
-        StringBuffer sb = new StringBuffer(hql);
-        if (userInfo != null) {
-            if (StringUtils.isNotEmpty(userInfo.getUserName())) {
-                sb.append(" and ui.userName like ? ");
-                objList.add("%" + userInfo.getUserName() + "%");
-            }
-            if (StringUtils.isNotEmpty(userInfo.getNickName())) {
-                sb.append(" and ui.nickName like ? ");
-                objList.add("%" + userInfo.getNickName() + "%");
-            }
-            if (userInfo.getDeleteFlag() != null) {
-                sb.append(" and ui.deleteFlag = ? ");
-                objList.add(userInfo.getDeleteFlag());
-            }
-        }
-        return sb.toString();
-    }
-
-    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-    public UserInfo getUserInfo(String name, String password) {
-        String hql = "from UserInfo where username = ? and password= ?";
-        List<Object> objList = new ArrayList<Object>();
-        objList.add(name);
-        objList.add(password);
-        return (UserInfo) userInfoDao.getObjectByHql(hql, objList);
-    }
-
-    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-    public UserInfo getUserInfo(String name) {
-    	
-    	Criteria c = userInfoDao.getSession().createCriteria(UserInfo.class);  
-        c.add(Restrictions.eq("userName", name)); 
-        
-        c.setFetchMode("roles", FetchMode.JOIN);  
-        UserInfo ui = (UserInfo) c.uniqueResult(); 
-        return ui;
-    }
+	@DataSourceType(Constant.MASTER_DATASOURCE_KEY)
+	public void updateUserInfo(UserInfo userInfo) {
+		List<Object> objList = new ArrayList<Object>();
+		String hql = "update UserInfo t set t.address = ?, t.mobile = ?, t.version = t.version + 1, "
+		        + " t.updateTime = current_timestamp where t.id = ? and t.version = ?";
+		objList.add(userInfo.getAddress());
+		objList.add(userInfo.getMobile());
+		objList.add(userInfo.getId());
+		objList.add(userInfo.getVersion());
+		userInfoDao.update(hql, objList);
+	}
 
 	@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
+	public PageResultSet<UserInfo> queryForPage(UserInfo user, int pageSize, int currentPage) {
+		String hql = "SELECT count(id) FROM UserInfo ui where 1 = 1 ";
+		List<Object> objList = new ArrayList<Object>();
+		int totalRow = userInfoDao.queryRowCount(createHql(hql, user, objList), objList);
+		List<UserInfo> users = null;
+		PageInfo pageInfo = new PageInfo(totalRow, pageSize, currentPage);
+		if (totalRow == 0) {
+			users = new ArrayList<UserInfo>();
+		} else {
+			hql = "FROM UserInfo ui where 1 = 1 ";
+			objList.clear();
+			users = userInfoDao.queryForPage(createHql(hql, user, objList), objList, pageInfo.countOffset(),
+			        pageInfo.getPageSize());
+		}
+
+		return new PageResultSet<UserInfo>(pageInfo, users);
+	}
+
+	private String createHql(String hql, UserInfo userInfo, List<Object> objList) {
+		StringBuffer sb = new StringBuffer(hql);
+		if (userInfo != null) {
+			if (StringUtils.isNotEmpty(userInfo.getUserName())) {
+				sb.append(" and ui.userName like ? ");
+				objList.add("%" + userInfo.getUserName() + "%");
+			}
+			if (StringUtils.isNotEmpty(userInfo.getNickName())) {
+				sb.append(" and ui.nickName like ? ");
+				objList.add("%" + userInfo.getNickName() + "%");
+			}
+			if (userInfo.getDeleteFlag() != null) {
+				sb.append(" and ui.deleteFlag = ? ");
+				objList.add(userInfo.getDeleteFlag());
+			}
+		}
+		return sb.toString();
+	}
+
+	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
+	public UserInfo getUserInfo(String name, String password) {
+		String hql = "from UserInfo where username = ? and password= ?";
+		List<Object> objList = new ArrayList<Object>();
+		objList.add(name);
+		objList.add(password);
+		return (UserInfo) userInfoDao.getObjectByHql(hql, objList);
+	}
+
+	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
+	public UserInfo getUserInfo(String name) {
+
+		Criteria c = userInfoDao.getSession().createCriteria(UserInfo.class);
+		c.add(Restrictions.eq("userName", name));
+
+		c.setFetchMode("roles", FetchMode.JOIN);
+		UserInfo ui = (UserInfo) c.uniqueResult();
+		return ui;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return getUserInfo(username);
-    }
+	}
 
 }

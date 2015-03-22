@@ -52,15 +52,14 @@ public class LoginController {
 	@RequestMapping("/welcome")
 	public String welcome(HttpSession session, Model model) {
 		SecurityContext sc = SecurityContextHolder.getContext();
-		User user = (User) sc.getAuthentication().getPrincipal();
-		UserInfo ui = userInfoService.getUserInfo(user.getUsername());
-		List<Role> roles = ui.getRoles();
+		UserInfo user = (UserInfo) sc.getAuthentication().getPrincipal();
+		List<Role> roles = user.getRoles();
 		List<Role> temp = new ArrayList<Role>();
 		for (Role role : roles) {
 			temp.add(roleService.getRole(role.getId()));
 		}
-		ui.setRoles(temp);
-		session.setAttribute("sessionUserInfo", ui);
+		user.setRoles(temp);
+		session.setAttribute("sessionUserInfo", user);
 		return "welcome";
 	}
 

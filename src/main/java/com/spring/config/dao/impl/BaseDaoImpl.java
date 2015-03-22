@@ -59,6 +59,16 @@ public class BaseDaoImpl<T extends Serializable, ID extends Serializable> implem
     public T get(ID id) {
         return (T) getSession().get(entity, id);
     }
+    
+    @SuppressWarnings("unchecked")
+    public T load(ID id) {
+    	return (T) getSession().load(entity, id);
+    }
+    
+    public void update(String hql, List<Object> objList) {
+    	Query query = getHqlQuery(hql, objList);
+    	query.executeUpdate();
+    }
 
     /**
      * 查询的结果记录总数

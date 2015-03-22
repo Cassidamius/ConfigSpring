@@ -20,6 +20,8 @@ public interface BaseService<T extends Serializable, ID extends Serializable> ex
     void update(T t);
 
     T get(ID id);
+    
+    T load(ID id);
 
     List<T> list();
 
@@ -28,5 +30,7 @@ public interface BaseService<T extends Serializable, ID extends Serializable> ex
     void deleteObject(T t);
 
     void saveOrUpdate(T t);
+    
+    void merge(T t);
 
 }

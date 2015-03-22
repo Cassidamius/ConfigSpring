@@ -36,6 +36,11 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
     public void saveOrUpdate(T t) {
         getBaseDao().saveOrUpdate(t);
     }
+    
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
+    public void merge(T t) {
+    	getBaseDao().merge(t);
+    }
 
     @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public ID save(T t) {
@@ -60,6 +65,11 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
     @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
     public T get(ID id) {
         return (T) getBaseDao().get(id);
+    }
+    
+    @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
+    public T load(ID id) {
+        return (T) getBaseDao().load(id);
     }
 
     @DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
@@ -90,7 +100,6 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
 
 	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-	    // TODO Auto-generated method stub
 	    return null;
     }
     
