@@ -20,6 +20,7 @@
 				<td colspan="2"><input type="submit" value="提交" /></td>
 			</tr>
 		</table>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	</form:form>
 </body>
 </html>

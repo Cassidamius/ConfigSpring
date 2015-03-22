@@ -38,33 +38,30 @@ public class LoginController {
 		return "login";
 	}
 
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/login", method = { RequestMethod.GET })
 	public String login(HttpServletRequest request, UserInfo userInfo, Model model) {
 		HttpSession session = request.getSession(true);
-		AuthenticationException exception = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-		
-		model.addAttribute("error", exception.getMessage());
+		AuthenticationException exception = (AuthenticationException) session
+		        .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		if (exception != null) {
+			model.addAttribute("error", exception.getMessage());
+		}
 		return "login";
 	}
 
-	 @RequestMapping("/welcome")
-	 public String welcome(HttpSession session, Model model) {
-	 SecurityContext sc = SecurityContextHolder.getContext();
-	 User user = (User)sc.getAuthentication().getPrincipal();
-	 UserInfo ui = userInfoService.getUserInfo(user.getUsername());
-	 List<Role> roles = ui.getRoles();
-	 List<Role> temp = new ArrayList<Role>();
-	 for (Role role : roles) {
-	 temp.add(roleService.getRole(role.getId()));
-	 }
-	 ui.setRoles(temp);
-	 session.setAttribute("sessionUserInfo", ui);
-	 return "welcome";
-	 }
-
-	// @RequestMapping("/logout")
-	// public String logout() {
-	// return "forward:login";
-	// }
+	@RequestMapping("/welcome")
+	public String welcome(HttpSession session, Model model) {
+		SecurityContext sc = SecurityContextHolder.getContext();
+		User user = (User) sc.getAuthentication().getPrincipal();
+		UserInfo ui = userInfoService.getUserInfo(user.getUsername());
+		List<Role> roles = ui.getRoles();
+		List<Role> temp = new ArrayList<Role>();
+		for (Role role : roles) {
+			temp.add(roleService.getRole(role.getId()));
+		}
+		ui.setRoles(temp);
+		session.setAttribute("sessionUserInfo", ui);
+		return "welcome";
+	}
 
 }

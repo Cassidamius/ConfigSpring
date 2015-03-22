@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import javax.ws.rs.HttpMethod;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -18,7 +22,10 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -43,6 +50,9 @@ import org.springframework.security.web.access.intercept.DefaultFilterInvocation
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
@@ -52,10 +62,37 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @Configuration
 @EnableWebMvcSecurity
 @Import({ DynamicDataSourceConfig.class })
+@PropertySource({ "classpath:/config/properties/springSecurityConfig.properties" })
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Value("${login.url}")
+	String loginUrl;
+
+	@Value("${login.logout.url}")
+	String logoutUrl;
+
+	@Value("${login.username}")
+	String userName;
+
+	@Value("${login.password}")
+	String password;
+
+	@Value("${login.success.url}")
+	String successUrl;
+
+	@Value("${login.error.url}")
+	String errorUrl;
 
 	@Resource(name = "dynamicDataSource")
 	private DataSource dynamicDataSource;
+
+	String authoritiesByUsernameQuery = "select u.username,r.name as authority from t_user u "
+	        + " join t_user_role ur on u.id=ur.user_id join t_role r on r.id=ur.role_id " + " where u.username=?";
+
+	String usersByUsernameQuery = "select username, password, status as enabled from t_user " + " where username=?";
+
+	String resourceQuery = "select re.resc_string, r.name from t_role r join t_resc_role rr "
+	        + " on r.id = rr.role_id join t_resc re on re.id = rr.resc_id order by re.priority";
 
 	/**
 	 * 设置不拦截规则
@@ -80,32 +117,46 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		cpf.setSecurityMetadataSource(cpfMetadataSource());
 
 		SimpleUrlLogoutSuccessHandler slsh = new SimpleUrlLogoutSuccessHandler();
+		slsh.setDefaultTargetUrl(loginUrl);
 		SecurityContextLogoutHandler sclh = new SecurityContextLogoutHandler();
 
-		LogoutFilter lf = new LogoutFilter(slsh, sclh);
-		RequestMatcher logoutRequestMatcher = new AntPathRequestMatcher("/logout");
-		lf.setLogoutRequestMatcher(logoutRequestMatcher);
+		 LogoutFilter lf = new LogoutFilter(slsh, sclh);
+		 RequestMatcher logoutRequestMatcher = new
+		 AntPathRequestMatcher(logoutUrl, HttpMethod.GET);
+		 lf.setLogoutRequestMatcher(logoutRequestMatcher);
+		 
+		MyUsernamePasswordAuthenticationFilter upaf = new MyUsernamePasswordAuthenticationFilter();
+		upaf.setAuthenticationManager(providerManager());
 
-		http.csrf().disable().addFilterAfter(lf, LogoutFilter.class)
-		        .addFilterAfter(fsi, FilterSecurityInterceptor.class)
-		        .addFilterAfter(cpf, ChannelProcessingFilter.class).authorizeRequests().anyRequest().authenticated()
-		        .and().formLogin().loginPage("/login").usernameParameter("userName").defaultSuccessUrl("/welcome")
-		        .and().httpBasic().and().authenticationProvider(authenticationProvider());
+		upaf.setUsernameParameter(userName);
+		upaf.setPasswordParameter(password);
+		upaf.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(successUrl));
+		upaf.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(errorUrl));
+		upaf.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(loginUrl, HttpMethod.POST));
+
+		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
+		.addFilterAfter(lf, LogoutFilter.class)
+		        .addFilterBefore(upaf, UsernamePasswordAuthenticationFilter.class).addFilter(fsi).addFilter(cpf)
+		        .authorizeRequests().anyRequest().authenticated().and().httpBasic();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		String authoritiesByUsernameQuery = "select u.username,r.name as authority from t_user u "
-		        + " join t_user_role ur on u.id=ur.user_id join t_role r on r.id=ur.role_id " + " where u.username=?";
-		String usersByUsernameQuery = "select username, password, status as enabled from t_user " + " where username=?";
 		auth.jdbcAuthentication().authoritiesByUsernameQuery(authoritiesByUsernameQuery)
 		        .usersByUsernameQuery(usersByUsernameQuery).dataSource(dynamicDataSource);
+	}
 
+	@Bean
+	public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() {
+		UsernamePasswordAuthenticationFilter upaf = new UsernamePasswordAuthenticationFilter();
+		upaf.setAuthenticationManager(providerManager());
+		upaf.setUsernameParameter(userName);
+		return upaf;
 	}
 
 	@Bean
 	public AuthenticationEntryPoint authenticationEntryPoint() {
-		return new LoginUrlAuthenticationEntryPoint("/login");
+		return new LoginUrlAuthenticationEntryPoint(loginUrl);
 	}
 
 	/**
@@ -125,10 +176,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * 
 	 * @return
 	 */
-	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
 		dap.setUserDetailsService(userDetailsService());
+		dap.setHideUserNotFoundExceptions(false);
 		dap.setPasswordEncoder(new Md5PasswordEncoder());
 		ReflectionSaltSource saltSource = new ReflectionSaltSource();
 		saltSource.setUserPropertyToUse("username");
@@ -136,10 +187,26 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return dap;
 	}
 
+	public AuthenticationProvider anonymousAuthenticationProvider() {
+		AnonymousAuthenticationProvider provider = new AnonymousAuthenticationProvider(UUID.randomUUID().toString());
+		return provider;
+	}
+
+	public AuthenticationManager providerManager() {
+		List<AuthenticationProvider> providersParent = new ArrayList<AuthenticationProvider>();
+		providersParent.add(authenticationProvider());
+		AuthenticationManager parent = new ProviderManager(providersParent);
+
+		List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
+		providers.add(anonymousAuthenticationProvider());
+
+		AuthenticationManager manager = new ProviderManager(providers, parent);
+		return manager;
+	}
+
 	public FilterInvocationSecurityMetadataSource fsiMetadataSource() {
 		JdbcFilterInvocationDefinitionSourceFactoryBean bean = new JdbcFilterInvocationDefinitionSourceFactoryBean();
-		String resourceQuery = "select re.resc_string, r.name from t_role r join t_resc_role rr "
-		        + " on r.id = rr.role_id join t_resc re on re.id = rr.resc_id order by re.priority";
+
 		bean.setResourceQuery(resourceQuery);
 		bean.setDataSource(dynamicDataSource);
 		return bean.getObject();
