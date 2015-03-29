@@ -65,8 +65,8 @@ public class UserInfo extends BaseEntity implements UserDetails {
 
 	@Column(name = "salt")
 	private String salt;
-	
-	@Column(name="descn")
+
+	@Column(name = "descn")
 	private String descn;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -210,7 +210,7 @@ public class UserInfo extends BaseEntity implements UserDetails {
 	@Override
 	@Transient
 	public boolean isEnabled() {
-		return true;
+		return this.deleteFlag == 1 ? true : false;
 	}
 
 }

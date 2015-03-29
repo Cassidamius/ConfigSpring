@@ -12,7 +12,7 @@ import com.spring.config.filter.ContextFilter;
  * 所有实现了WebApplicationInitializer接口的类都会在容器启动时自动被加载运行，用@Order注解设定加载顺序
  * 这是servlet3.0+后加入的特性，web.xml中可以不需要配置内容，都硬编码到WebApplicationInitializer的实现类中
  */
-@Order(3)
+@Order(2)
 // spring DispatcherServlet的配置,其它servlet和监听器等需要额外声明，用@Order注解设定启动顺序
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -41,15 +41,15 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@Override
 	protected Filter[] getServletFilters() {
 		
-		CharacterEncodingFilter cef = new CharacterEncodingFilter();
-		cef.setEncoding("UTF-8");
-		cef.setForceEncoding(true);
+//		CharacterEncodingFilter cef = new CharacterEncodingFilter();
+//		cef.setEncoding("UTF-8");
+//		cef.setForceEncoding(true);
 		// sessionStore
 		ContextFilter cf = new ContextFilter();
 		// OpenSessionInViewFilter
 //		OpenSessionInViewFilter osivf = new OpenSessionInViewFilter();
 //		osivf.setSessionFactoryBeanName("sessionFactory");
-		Filter[] filters = new Filter[] { cef, cf/*, osivf*/ };
+		Filter[] filters = new Filter[] { /*cef,*/ cf/*, osivf*/ };
 		return filters;
 	}
 

@@ -1,5 +1,10 @@
 package com.spring.config.initializer;
 
+import java.nio.charset.Charset;
+import java.util.List;
+
+import javax.xml.transform.Source;
+
 import org.apache.log4j.Logger;
 import org.apache.tiles.preparer.PreparerFactory;
 import org.springframework.context.MessageSource;
@@ -8,21 +13,26 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.handler.SimpleServletHandlerAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory;
@@ -34,10 +44,14 @@ import com.spring.config.interceptor.MyInitializingInterceptor;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.spring.config", useDefaultFilters = false, includeFilters = { @ComponentScan.Filter(type = FilterType.ANNOTATION, value = { Controller.class }) })
-public class MvcConfig extends WebMvcConfigurationSupport {
+public class MvcConfig extends DelegatingWebMvcConfiguration {
 
 	private static final Logger logger = Logger.getLogger(MvcConfig.class);
-		
+	
+	public MvcConfig() {
+		System.out.println("-----------------mvn config---------------------");
+	}
+
 	/**
 	 * 描述 : <添加拦截器>. <br>
 	 * <p>
@@ -46,13 +60,34 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	 * 
 	 * @param registry
 	 */
+//	@Override
+//	protected void addInterceptors(InterceptorRegistry registry) {
+//		logger.info("addInterceptors start");
+//		registry.addWebRequestInterceptor(new OpenSessionInViewInterceptor()).addPathPatterns("/**");
+//		registry.addInterceptor(localeChangeInterceptor());
+//		registry.addInterceptor(initializingInterceptor()).addPathPatterns("/**");
+//		logger.info("addInterceptors end");
+//	}
+	
+	@Bean
+	public StringHttpMessageConverter stringHttpMessageConverter() {
+		return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+	}
+	
+	/**
+	 * 描述 : <资源访问处理器>. <br>
+	 * <p>
+	 * <可以在jsp中使用/static/**的方式访问/WEB-INF/static/下的内容>
+	 * </p>
+	 * 
+	 * @param registry
+	 */
 	@Override
-	protected void addInterceptors(InterceptorRegistry registry) {
-		logger.info("addInterceptors start");
-		registry.addWebRequestInterceptor(new OpenSessionInViewInterceptor()).addPathPatterns("/**");
-		registry.addInterceptor(localeChangeInterceptor());
-		registry.addInterceptor(initializingInterceptor()).addPathPatterns("/**");
-		logger.info("addInterceptors end");
+	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+		logger.info("addResourceHandlers");
+		registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
+		registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/images/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
 	}
 
 	/**
@@ -71,6 +106,7 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 		viewResolver.setPrefix("/WEB-INF/content/");
 		viewResolver.setSuffix(".jsp");
 		viewResolver.setOrder(2);
+		viewResolver.setContentType("text/plain;charset=UTF-8");
 		return viewResolver;
 	}
 
@@ -79,6 +115,7 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
 		viewResolver.setViewClass(TilesView.class);
 		viewResolver.setOrder(1);
+		viewResolver.setContentType("text/plain;charset=UTF-8");
 		return viewResolver;
 	}
 
@@ -172,13 +209,13 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	 * 
 	 * @return
 	 */
-	// @Bean
-	// public RequestMappingHandlerMapping requestMappingHandlerMapping() {
-	// logger.info("RequestMappingHandlerMapping");
-	//
-	// return super.requestMappingHandlerMapping();
-	// }
-
+	 @Bean
+	 public RequestMappingHandlerMapping requestMappingHandlerMapping() {
+	 logger.info("RequestMappingHandlerMapping");
+	
+	 return super.requestMappingHandlerMapping();
+	 }
+	 
 	/**
 	 * 描述 : <HandlerMapping需要显示声明，否则不能注册资源访问处理器>. <br>
 	 * <p>
@@ -191,22 +228,6 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	public HandlerMapping resourceHandlerMapping() {
 		logger.info("HandlerMapping");
 		return super.resourceHandlerMapping();
-	}
-
-	/**
-	 * 描述 : <资源访问处理器>. <br>
-	 * <p>
-	 * <可以在jsp中使用/static/**的方式访问/WEB-INF/static/下的内容>
-	 * </p>
-	 * 
-	 * @param registry
-	 */
-	@Override
-	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-		logger.info("addResourceHandlers");
-		registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
-		registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/images/");
-		registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
 	}
 
 	/**
@@ -245,19 +266,19 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	// return simpleMappingExceptionResolver;
 	// }
 
-	/**
+	 /**
 	 * 描述 : <RequestMappingHandlerAdapter需要显示声明，否则不能注册通用属性编辑器>. <br>
 	 * <p>
 	 * <这个比较奇怪,理论上应该是不需要的>
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
-	@Bean
-	public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-		logger.info("RequestMappingHandlerAdapter");
-		return super.requestMappingHandlerAdapter();
-	}
+	 @Bean
+	 public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
+	 logger.info("RequestMappingHandlerAdapter");
+	 return super.requestMappingHandlerAdapter();
+	 }
 
 	/**
 	 * 描述 : <注册通用属性编辑器>. <br>

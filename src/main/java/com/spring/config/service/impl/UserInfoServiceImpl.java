@@ -49,8 +49,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
 	@DataSourceType(Constant.MASTER_DATASOURCE_KEY)
 	public void updateUserInfo(UserInfo userInfo) {
 		List<Object> objList = new ArrayList<Object>();
-		String hql = "update UserInfo t set t.address = ?, t.mobile = ?, t.version = t.version + 1, "
-		        + " t.updateTime = current_timestamp where t.id = ? and t.version = ?";
+		String hql = "update UserInfo t set t.descn = ?, t.nickName = ?, t.address = ?, t.mobile = ?, "
+		        + " t.version = t.version + 1, t.updateTime = current_timestamp where t.id = ? and t.version = ?";
+		objList.add(userInfo.getDescn());
+		objList.add(userInfo.getNickName());
 		objList.add(userInfo.getAddress());
 		objList.add(userInfo.getMobile());
 		objList.add(userInfo.getId());
@@ -119,7 +121,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return getUserInfo(username);
+		UserDetails user = getUserInfo(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("user '" + username + "' not found.");
+		}
+		return user;
 	}
 
 }

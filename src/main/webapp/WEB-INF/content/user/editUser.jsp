@@ -2,6 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <script language="javascript" type="text/javascript" src="js/jquery/jquery-1.10.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="js/common.js"></script>
+<% request.setCharacterEncoding("utf-8"); %>
 
 <h2>编辑用户</h2>
 <form:form id="editForm" commandName="userInfo" method="post" action="${pageContext.request.contextPath}/editUserInfo">

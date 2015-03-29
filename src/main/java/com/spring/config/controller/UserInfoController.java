@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,12 +86,13 @@ public class UserInfoController {
 		return "userList";
 	}
 
-	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST)
-	public String editUser(HttpServletRequest request, UserInfo userInfo, Model model) throws UnsupportedEncodingException {
-//		UserInfo user = (UserInfo)request.getp
+	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public String editUser(@RequestHeader("Accept-Encoding") String encoding, HttpServletRequest request, UserInfo userInfo, Model model) throws UnsupportedEncodingException {
+
+		String e = request.getCharacterEncoding();
 		List<Role> roleList = roleService.getRoleSetByUserId(userInfo.getId());
 		userInfo.setRoles(roleList);
-		userInfo.setAddress(new String(userInfo.getAddress().getBytes("iso-8859-1"), "utf-8"));
+//		userInfo.setAddress(new String(userInfo.getAddress().getBytes("iso-8859-1"), "utf-8"));
 		userInfoService.updateUserInfo(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());

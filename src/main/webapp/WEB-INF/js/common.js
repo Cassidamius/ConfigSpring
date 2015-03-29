@@ -28,3 +28,10 @@ function toAddPage(url) {
 function edit() {
 	$("#editForm").submit();
 }
+
+function logout() {
+	alert(0);
+	$("#logoutForm").attr("method", "post");
+	$("#logoutForm").attr("action", "logout");
+	$("#logoutForm").submit();
+}
