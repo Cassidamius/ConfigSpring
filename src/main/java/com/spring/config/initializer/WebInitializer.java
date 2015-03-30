@@ -3,7 +3,6 @@ package com.spring.config.initializer;
 import javax.servlet.Filter;
 
 import org.springframework.core.annotation.Order;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.spring.config.filter.ContextFilter;

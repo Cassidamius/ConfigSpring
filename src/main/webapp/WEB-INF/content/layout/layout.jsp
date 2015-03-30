@@ -8,9 +8,9 @@
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
 <title>测试系统</title>
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/core.css">
-<link rel="stylesheet" href="css/demos.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/core.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/demos.css">
 </head>
 <body>
 	<div id="header">

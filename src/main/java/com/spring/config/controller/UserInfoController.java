@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,8 +34,8 @@ public class UserInfoController {
 	@Autowired
 	private RoleService roleService;
 
-	@RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
-	public String getUserInfo(@RequestParam("id") Integer id, Model model) {
+	@RequestMapping(value = "/getUserInfoById/{id}", method = RequestMethod.GET)
+	public String getUserInfoById(@PathVariable Integer id, Model model) {
 		model.addAttribute("userInfo", userInfoService.get(id));
 		return "toEditUserPage";
 	}
@@ -88,11 +89,8 @@ public class UserInfoController {
 
 	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public String editUser(@RequestHeader("Accept-Encoding") String encoding, HttpServletRequest request, UserInfo userInfo, Model model) throws UnsupportedEncodingException {
-
-		String e = request.getCharacterEncoding();
 		List<Role> roleList = roleService.getRoleSetByUserId(userInfo.getId());
 		userInfo.setRoles(roleList);
-//		userInfo.setAddress(new String(userInfo.getAddress().getBytes("iso-8859-1"), "utf-8"));
 		userInfoService.updateUserInfo(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
