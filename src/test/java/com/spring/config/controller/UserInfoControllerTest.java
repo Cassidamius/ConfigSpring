@@ -20,7 +20,7 @@ public class UserInfoControllerTest extends AbsWebAppContextSetupTest {
 	@Test
 	public void getByIdTest() throws Exception {
 		// 执行请求
-		mockMvc.perform(get("/getUserInfo/1").accept(MediaType.ALL)).andExpect(status().isOk())
+		mockMvc.perform(get("/getUserInfoById/{id}", 1).accept(MediaType.ALL)).andExpect(status().isOk())
 		        .andExpect(model().attributeExists(new String[] { "userInfo" }));
 
 	}
@@ -39,7 +39,8 @@ public class UserInfoControllerTest extends AbsWebAppContextSetupTest {
 		Gson gson = new Gson();
 		String json = gson.toJson(list);
 		System.out.println(json);
-		mockMvc.perform(post("/addUserInfo").content(json).accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"));
+
+		mockMvc.perform(post("/addUserInfo"));
 
 	}
 
