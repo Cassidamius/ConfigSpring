@@ -1,25 +1,18 @@
 package com.spring;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import org.apache.commons.lang3.time.DateUtils;
 
 public class Main {
 	
     public static void main(String[] args) {
-    	Date a = new Date();
-    	DateFormat df = new SimpleDateFormat("YYYYMMDD");
-    	System.out.println(df.format(a));
-    	Date b = new Date(2015, 1, 25);
-    	System.out.println(a.compareTo(b));
-    	Calendar c = new GregorianCalendar(2015, 1, 26);
-    	Calendar c2 = new GregorianCalendar(2015, 1, 27);
-    	DateUtils du = null;
-    	c.add(Calendar.DAY_OF_MONTH, 5);
+//    	Date a = new Date();
+//    	DateFormat df = new SimpleDateFormat("YYYYMMDD");
+//    	System.out.println(df.format(a));
+//    	Date b = new Date(2015, 1, 25);
+//    	System.out.println(a.compareTo(b));
+//    	Calendar c = new GregorianCalendar(2015, 1, 26);
+//    	Calendar c2 = new GregorianCalendar(2015, 1, 27);
+//    	DateUtils du = null;
+//    	c.add(Calendar.DAY_OF_MONTH, 5);
 //		simpleConstruction();
 //		useRegister();
 //		testUserService();
