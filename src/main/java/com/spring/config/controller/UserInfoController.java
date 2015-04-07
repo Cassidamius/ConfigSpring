@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,18 +42,11 @@ public class UserInfoController {
 	}
 
 	@RequestMapping(value = "/addUserInfo", method = RequestMethod.POST)
-	public String addUserInfo(UserInfo userInfo,Integer[] roleids, Model model) {
+	public String addUserInfo(@RequestBody UserInfo userInfo, Model model) {
 		userInfo.setDeleteFlag(1);
 		String salt = UUID.randomUUID().toString();
 		userInfo.setSalt(salt);
-		userInfo.setPassword(MD5Util.MD5(userInfo.getPassword() + "{" + salt + "}"));
-		List<Role> list = new ArrayList<Role>();
-		for (Integer id : roleids) {
-			Role role = roleService.get(id);
-			role.setId(id);
-			list.add(role);
-		}
-		userInfo.setRoles(list);
+		userInfo.setPassword(MD5Util.MD5(userInfo.getUserName() + "{" + salt + "}"));
 		userInfoService.save(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		return "userList";

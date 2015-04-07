@@ -20,9 +20,10 @@ import com.spring.config.initializer.MvcConfig;
 @WebAppConfiguration(value = "src/main/webapp")
 @ContextHierarchy({ @ContextConfiguration(name = "parent", classes = AppConfig.class),
         @ContextConfiguration(name = "child", classes = MvcConfig.class) })
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-@Transactional
+//@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+//@Transactional
 public abstract class AbsWebAppContextSetupTest {
+	
 	@Autowired
 	private WebApplicationContext wac;
 

@@ -33,7 +33,7 @@
 		</tr>
 		<c:forEach var="item" items="${roles}" varStatus="statu" begin="0">
 			<tr>
-				<td><input type="checkbox" name="roleids" value="${item.id}"/></td>
+				<td><form:checkbox path="roleIds" value="${item.id}"/></td>
 				<td>${item.name}</td>
 				<td>${item.roleDesc}</td>
 			</tr>

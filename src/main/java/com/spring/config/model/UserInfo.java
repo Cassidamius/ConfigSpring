@@ -72,6 +72,17 @@ public class UserInfo extends BaseEntity implements UserDetails {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	private List<Role> roles;
+	
+	@Transient
+	private List<Integer> roleIds;
+
+	public List<Integer> getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(List<Integer> roleIds) {
+		this.roleIds = roleIds;
+	}
 
 	public Integer getId() {
 		return id;
@@ -186,7 +197,7 @@ public class UserInfo extends BaseEntity implements UserDetails {
 	@Override
 	@Transient
 	public String getUsername() {
-		return this.userName;
+		return userName;
 	}
 
 	@Override
