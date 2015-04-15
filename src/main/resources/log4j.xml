@@ -41,7 +41,7 @@
 
 	<!-- 根logger的设置 -->
 	<root>
-		<priority value="error" />
+		<priority value="debug" />
 		<appender-ref ref="myConsole" />
 		<appender-ref ref="myFile" />
 	</root>

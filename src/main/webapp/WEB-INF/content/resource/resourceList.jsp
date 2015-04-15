@@ -15,7 +15,7 @@
 			<td colspan="2">
 				<input type="button" value="查询" name="search" onclick="searchList();" />&nbsp;&nbsp; 
 				<input type="button" value="清空" onclick="clean();" /> &nbsp;&nbsp;
-				<input type="button" value="添加" onclick="toAddPage('/toAddResourcePage');" />
+				<input type="button" value="添加" onclick="toAddPage('${pageContext.request.contextPath}/toAddResourcePage');" />
 			</td>
 		</tr>
 	</table>

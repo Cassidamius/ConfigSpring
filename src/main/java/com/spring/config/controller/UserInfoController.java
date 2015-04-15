@@ -1,7 +1,6 @@
 package com.spring.config.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,14 +40,14 @@ public class UserInfoController {
 	}
 
 	@RequestMapping(value = "/addUserInfo", method = RequestMethod.POST)
-	public String addUserInfo(@RequestBody UserInfo userInfo, Model model) {
+	public String addUserInfo(UserInfo userInfo/*, Model model*/) {
 		userInfo.setDeleteFlag(1);
 		String salt = UUID.randomUUID().toString();
 		userInfo.setSalt(salt);
 		userInfo.setPassword(MD5Util.MD5(userInfo.getUserName() + "{" + salt + "}"));
 		userInfoService.save(userInfo);
-		model.addAttribute("userInfo", userInfo);
-		return "userList";
+//		model.addAttribute("userInfo", userInfo);
+		return "forward:toUserListPage";
 	}
 
 	@RequestMapping(value = "/toAddUserPage")

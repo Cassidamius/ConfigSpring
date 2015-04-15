@@ -1,14 +1,20 @@
 package com.spring.config.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.config.model.Resource;
+import com.spring.config.model.UserInfo;
 import com.spring.config.pagination.PageResultSet;
 import com.spring.config.service.ResourceService;
+import com.spring.config.util.MD5Util;
 
 @Controller
 @Scope("prototype")
@@ -40,6 +46,14 @@ public class ResourceController {
 	public String toAddUserPage(Model model) {
 		model.addAttribute("resource", new Resource());
 		return "toAddResourcePage";
+	}
+	
+	@RequestMapping(value = "/addResource", method = RequestMethod.POST)
+	public String addResource(Resource resource, Model model) {
+		resource.setDeleteFlag(1);
+		resourcesService.save(resource);
+		model.addAttribute("resource", resource);
+		return "userList";
 	}
 
 }

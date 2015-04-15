@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -28,18 +27,12 @@ public class UserInfoControllerTest extends AbsWebAppContextSetupTest {
 
 	@Test
 	public void addUserInfoTest() throws Exception {
-		UserInfo userInfo = new UserInfo();
-		userInfo.setUserName("Mike");
-		userInfo.setPassword("Mike");
 		List<Integer> roleIds = new ArrayList<Integer>();
 		roleIds.add(1);
-		userInfo.setRoleIds(roleIds);
-
-		Gson gson = new Gson();
-		String json = gson.toJson(userInfo);
-
-		mockMvc.perform(post("/addUserInfo").content(json).contentType(MediaType.APPLICATION_JSON)).andExpect(
-		        status().isOk());
+		
+		mockMvc.perform(
+		        post("/addUserInfo").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("userName", "Mike003")
+		                .param("password", "111").param("roleIds", new String[] { "1" })).andExpect(status().isOk());
 
 	}
 

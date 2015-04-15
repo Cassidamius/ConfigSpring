@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script language="javascript" type="text/javascript" src="js/jquery/jquery-1.10.1.min.js"></script>
+<script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.10.1.min.js"></script>
 <script>
 	function addUser() {
 		$("#addForm").submit();
 	}
 </script>
 <h2>新增用户</h2>
-<form:form id="addForm" commandName="userInfo" method="post" action="${pageContext.request.contextPath}/addUserInfo">
+<form:form id="addForm" commandName="userInfo" ENCTYPE="application/x-www-form-urlencoded" method="post" action="${pageContext.request.contextPath}/addUserInfo">
 	<table>
 		<tr>
 			<td>用户名：</td>
