@@ -9,18 +9,18 @@ create table hibernate_sequences(
 -- 资源
 drop table if exists t_resc;
 create table t_resc(
-    id int comment '主键',
+    id int AUTO_INCREMENT primary key comment '主键',
     name varchar(50) comment '资源名称',
     resc_type varchar(50) comment '资源类型',
     resc_string varchar(200) comment '资源',
     priority int comment '资源优先级',
     descn varchar(200) comment '资源描述',
     version int not null comment '版本',
-	delete_flag int default 0 not null comment '删除标记：0：已删除　1：正常',
+	delete_flag int default 1 not null comment '删除标记：0：已删除　1：正常',
 	create_time timestamp default current_timestamp not null comment '创建时间',
 	update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '资源表';
-alter table t_resc add constraint pk_resc primary key(id);
+-- alter table t_resc add constraint pk_resc primary key(id);
 
 -- 角色
 drop table if exists t_role;
@@ -29,7 +29,7 @@ create table t_role(
     name varchar(50),
     descn varchar(200),
     version int not null comment '版本',
-	delete_flag int default 0 not null comment '删除标记：0：已删除　1：正常',
+	delete_flag int default 1 not null comment '删除标记：0：已删除　1：正常',
 	create_time timestamp default current_timestamp not null comment '创建时间',
 	update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '角色表';
@@ -52,7 +52,7 @@ create table t_user(
  salt char(36) comment '盐值：由java.util.UUID.randomUUID()生成',
  descn varchar(200) comment '描述',
  version int not null comment '版本',
- delete_flag int default 0 not null comment '删除标记：0：已删除　1：正常',
+ delete_flag int default 1 not null comment '删除标记：0：已删除　1：正常',
  create_time timestamp default current_timestamp not null comment '创建时间',
  update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '用户信息表';
@@ -85,7 +85,7 @@ user_id int comment '操作员',
 class_name varchar(300) comment '类名',
 method_name varchar(100) comment '方法名称',
 version int not null comment '版本',
-delete_flag int default 0 not null comment '删除标记：0：已删除　1：正常',
+delete_flag int default 1 not null comment '删除标记：0：已删除　1：正常',
 create_time timestamp default current_timestamp not null comment '创建时间',
 update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '操作日志';

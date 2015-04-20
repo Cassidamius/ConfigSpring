@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import com.spring.config.model.BaseEntity;
+
 /**
  * 
  * @param <T>
@@ -11,7 +13,7 @@ import org.hibernate.Session;
  * @param <ID>
  *            entity id
  */
-public interface BaseDao<T, ID> {
+public interface BaseDao<T extends BaseEntity, ID> {
 
     T get(ID id);
     
@@ -33,9 +35,11 @@ public interface BaseDao<T, ID> {
 
     void saveOrUpdate(T t);
     
-    void update(String hql, List<Object> objList);
+    Integer update(String hql, List<Object> objList);
 
     void delete(ID id);
+    
+    void deleteLogic(ID id);
 
     void deleteObject(T t);
 

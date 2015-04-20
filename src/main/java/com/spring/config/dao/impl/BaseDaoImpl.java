@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.spring.config.dao.BaseDao;
+import com.spring.config.model.BaseEntity;
 
 
 /**
@@ -19,7 +20,7 @@ import com.spring.config.dao.BaseDao;
  * @param <T>
  * @param <ID>
  */
-public class BaseDaoImpl<T extends Serializable, ID extends Serializable> implements BaseDao<T, ID> {
+public class BaseDaoImpl<T extends BaseEntity, ID extends Serializable> implements BaseDao<T, ID> {
 
     protected Class<T> entity;
 
@@ -47,6 +48,12 @@ public class BaseDaoImpl<T extends Serializable, ID extends Serializable> implem
         getSession().delete(get(id));
     }
     
+    public void deleteLogic(ID id) {
+    	BaseEntity baseEntity = get(id);
+    	baseEntity.setDeleteFlag(0);
+    	getSession().update(baseEntity);
+    }
+    
     public void deleteObject(T t) {
         getSession().delete(t);
     }
@@ -65,9 +72,9 @@ public class BaseDaoImpl<T extends Serializable, ID extends Serializable> implem
     	return (T) getSession().load(entity, id);
     }
     
-    public void update(String hql, List<Object> objList) {
+    public Integer update(String hql, List<Object> objList) {
     	Query query = getHqlQuery(hql, objList);
-    	query.executeUpdate();
+    	return query.executeUpdate();
     }
 
     /**

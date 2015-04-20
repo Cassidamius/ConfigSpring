@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.config.annotation.DataSourceType;
 import com.spring.config.common.Constant;
 import com.spring.config.dao.BaseDao;
+import com.spring.config.model.BaseEntity;
 import com.spring.config.service.BaseService;
 
 /**
@@ -22,7 +23,7 @@ import com.spring.config.service.BaseService;
  * @param <ID>
  */
 @Transactional
-public class BaseServiceImpl<T extends Serializable, ID extends Serializable> implements BaseService<T, ID> {
+public class BaseServiceImpl<T extends BaseEntity, ID extends Serializable> implements BaseService<T, ID> {
 
     private Class<T> entity;
 
@@ -55,6 +56,11 @@ public class BaseServiceImpl<T extends Serializable, ID extends Serializable> im
     @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
     public void delete(ID id) {
         getBaseDao().delete(id);
+    }
+    
+    @DataSourceType(Constant.MASTER_DATASOURCE_KEY)
+    public void deleteLogic(ID id) {
+    	getBaseDao().deleteLogic(id);
     }
     
     @DataSourceType(Constant.MASTER_DATASOURCE_KEY)

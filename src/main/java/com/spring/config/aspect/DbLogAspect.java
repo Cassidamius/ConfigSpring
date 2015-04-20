@@ -30,17 +30,23 @@ public class DbLogAspect {
 			return;
 		}
 		HttpSession session = SessionStore.getWebSession();
+
 		if (session == null) {
 			return;
 		}
-		System.out.println("before: " + jp.getTarget().getClass().getName()
-				+ "." + jp.getSignature().getName());
-		Logs logs = new Logs();		
-		UserInfo user = (UserInfo) session.getAttribute("sessionUserInfo");
+		System.out.println("before: " + jp.getTarget().getClass().getName() + "." + jp.getSignature().getName());
+		
+		UserInfo user = null;
+		try {
+			user = (UserInfo) session.getAttribute("sessionUserInfo");
+		} catch (IllegalStateException e) {
+			return;
+		}
+		Logs logs = new Logs();
 		logs.setUserInfo(user);
 		logs.setClassName(jp.getTarget().getClass().getName());
 		logs.setMethodName(jp.getSignature().getName());
-		logs.setDeleteFlag(0);
+		logs.setDeleteFlag(1);
 		logsService.save(logs);
 	}
 

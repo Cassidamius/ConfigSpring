@@ -86,7 +86,7 @@ public class UserInfoController {
 		userInfoService.updateUserInfo(userInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
-		return "userList";
+		return "forward:toUserListPage";
 	}
 	
 	@RequestMapping(value = "/findUserList")

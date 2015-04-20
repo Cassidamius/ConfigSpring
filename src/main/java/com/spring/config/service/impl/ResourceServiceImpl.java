@@ -26,6 +26,17 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, Integer> impl
 	public ResourceServiceImpl() {
 	    super(Resource.class);
     }
+	
+	@DataSourceType(Constant.MASTER_DATASOURCE_KEY)
+	public Integer updateResource(Resource resource) {
+		List<Object> objList = new ArrayList<Object>();
+		String hql = "update Resource t set t.name = ?, t.rescType = ?, t.rescString = ?, "
+		        + " t.version = t.version + 1, t.updateTime = current_timestamp where t.id = ? and t.version = ?";
+		objList.add(resource.getName());
+		objList.add(resource.getRescType());
+		objList.add(resource.getRescString());
+		return resourceDao.update(hql, objList);
+	}
 
 	@Override
 	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
@@ -38,7 +49,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, Integer> impl
         if (totalRow == 0) {
             resources = new ArrayList<Resource>();
         } else {
-            hql = "FROM Resource r where 1 = 1 ";
+            hql = "FROM Resource r where deleteFlag = 1 ";
             objList.clear();
             resources = resourceDao.queryForPage(createHql(hql, condition, objList), objList, pageInfo.countOffset(),
                     pageInfo.getPageSize());

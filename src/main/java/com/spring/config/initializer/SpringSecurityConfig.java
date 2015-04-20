@@ -92,9 +92,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and().logout().deleteCookies("JSESSIONID").invalidateHttpSession(true)
-		        .logoutRequestMatcher(new AntPathRequestMatcher(logoutUrl, HttpMethod.GET)).and().formLogin()
-		        .loginPage(loginUrl).usernameParameter(userName).passwordParameter(password)
+		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and().logout().deleteCookies("JSESSIONID")
+		        .invalidateHttpSession(true).logoutRequestMatcher(new AntPathRequestMatcher(logoutUrl, HttpMethod.GET))
+		        .and().formLogin().loginPage(loginUrl).usernameParameter(userName).passwordParameter(password)
 		        .defaultSuccessUrl(successUrl).failureUrl(errorUrl).and().httpBasic().and()
 		        .addFilter(this.filterSecurityInterceptor()).userDetailsService(userDetailsService())
 		        .authenticationProvider(daoAuthenticationProvider());

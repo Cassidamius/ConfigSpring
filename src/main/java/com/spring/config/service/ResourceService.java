@@ -4,4 +4,6 @@ import com.spring.config.model.Resource;
 
 public interface ResourceService extends PageService<Resource, Integer> {
 	
+	Integer updateResource(Resource resource);
+	
 }

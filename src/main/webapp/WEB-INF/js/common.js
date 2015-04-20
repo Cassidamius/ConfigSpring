@@ -2,17 +2,12 @@ function searchList() {
 	$("#searchForm").submit();
 }
 
-function deleteItem(url,id) {
+function toEditPage(url, id) {
 	$("#searchForm").attr("action", url + "?id=" + id);
 	$("#searchForm").submit();
 }
 
-function toEditPage(url,id) {
-	$("#searchForm").attr("action", url + "?id=" + id);
-	$("#searchForm").submit();
-}
-
-function changePage(currentPage,totalRow) {
+function changePage(currentPage, totalRow) {
 	$("#currentPage").val(currentPage);
 	$("#pageSize").val($("#pageSizeSelect option:selected").val());
 	$("#totalRow").val(totalRow);
@@ -30,7 +25,6 @@ function edit() {
 }
 
 function logout() {
-	alert(0);
 	$("#logoutForm").attr("method", "post");
 	$("#logoutForm").attr("action", "logout");
 	$("#logoutForm").submit();

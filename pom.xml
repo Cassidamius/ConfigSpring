@@ -11,15 +11,16 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jstl.version>1.2</jstl.version>
-		<spring.version>3.2.6.RELEASE</spring.version>
+		<spring.version>3.2.9.RELEASE</spring.version>
+		<spring.security.version>3.2.6.RELEASE</spring.security.version>
 		<jsp.api.version>2.2</jsp.api.version>
 		<c3p0.version>0.9.1.2</c3p0.version>
 		<derby.version>10.10.1.1</derby.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<druid.version>0.2.8</druid.version>
-		<servlet.api.version>2.5</servlet.api.version>
+		<servlet.api.version>3.1</servlet.api.version>
 		<log4j.version>1.2.17</log4j.version>
-		<hibernate.version>4.2.7.Final</hibernate.version>
+		<hibernate.version>4.2.19.Final</hibernate.version>
 		<junit.version>4.11</junit.version>
 		<tiles.version>2.2.2</tiles.version>
 		<slf4j.version>1.4.0</slf4j.version>
@@ -45,10 +46,10 @@
 			<version>2.6.2</version>
 		</dependency>
 		<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.3.1</version>
-</dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
@@ -274,12 +275,12 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>${spring.version}</version>
+			<version>${spring.security.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>${spring.version}</version>
+			<version>${spring.security.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

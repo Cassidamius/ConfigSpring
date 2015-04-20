@@ -2,6 +2,7 @@ package com.spring.config.service;
 
 import java.io.Serializable;
 
+import com.spring.config.model.BaseEntity;
 import com.spring.config.pagination.PageResultSet;
 
 /**
@@ -11,7 +12,7 @@ import com.spring.config.pagination.PageResultSet;
  * @param <T>
  * @param <ID>
  */
-public interface PageService<T extends Serializable, ID extends Serializable> extends BaseService<T, ID> {
+public interface PageService<T extends BaseEntity, ID extends Serializable> extends BaseService<T, ID> {
 
     /**
      * 翻页查询

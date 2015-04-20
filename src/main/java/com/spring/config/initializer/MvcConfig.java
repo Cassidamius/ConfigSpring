@@ -1,9 +1,6 @@
 package com.spring.config.initializer;
 
 import java.nio.charset.Charset;
-import java.util.List;
-
-import javax.xml.transform.Source;
 
 import org.apache.log4j.Logger;
 import org.apache.tiles.preparer.PreparerFactory;
@@ -13,12 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
-import org.springframework.http.converter.xml.SourceHttpMessageConverter;
-import org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -26,12 +18,10 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.handler.SimpleServletHandlerAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -274,11 +264,11 @@ public class MvcConfig extends DelegatingWebMvcConfiguration {
 	 *
 	 * @return
 	 */
-	 @Bean
-	 public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-	 logger.info("RequestMappingHandlerAdapter");
-	 return super.requestMappingHandlerAdapter();
-	 }
+//	 @Bean
+//	 public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
+//	 logger.info("RequestMappingHandlerAdapter");
+//	 return super.requestMappingHandlerAdapter();
+//	 }
 
 	/**
 	 * 描述 : <注册通用属性编辑器>. <br>

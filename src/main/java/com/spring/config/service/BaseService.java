@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.spring.config.model.BaseEntity;
+
 /**
  * 基础服务
  * 
@@ -13,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @param <T>
  * @param <ID>
  */
-public interface BaseService<T extends Serializable, ID extends Serializable> extends UserDetailsService {
+public interface BaseService<T extends BaseEntity, ID extends Serializable> extends UserDetailsService {
 
     ID save(T t);
 
@@ -26,6 +28,8 @@ public interface BaseService<T extends Serializable, ID extends Serializable> ex
     List<T> list();
 
     void delete(ID id);
+    
+    void deleteLogic(ID id);
     
     void deleteObject(T t);
 

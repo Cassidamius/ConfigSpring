@@ -1,20 +1,23 @@
 package com.spring.config.controller;
 
-import java.util.UUID;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.config.model.Resource;
-import com.spring.config.model.UserInfo;
 import com.spring.config.pagination.PageResultSet;
 import com.spring.config.service.ResourceService;
-import com.spring.config.util.MD5Util;
 
 @Controller
 @Scope("prototype")
@@ -31,7 +34,7 @@ public class ResourceController {
 	}
 
 	@RequestMapping(value = "/findResourceList")
-	public String findUserList(Resource resource, PageResultSet<Resource> pageResultSet, Model model) {
+	public String findResourceList(Resource resource, PageResultSet<Resource> pageResultSet, Model model) {
 		if (pageResultSet == null) {
 			pageResultSet = new PageResultSet<Resource>();
 		}
@@ -47,13 +50,42 @@ public class ResourceController {
 		model.addAttribute("resource", new Resource());
 		return "toAddResourcePage";
 	}
-	
+
 	@RequestMapping(value = "/addResource", method = RequestMethod.POST)
-	public String addResource(Resource resource, Model model) {
+	public String addResource(Resource resource) {
 		resource.setDeleteFlag(1);
 		resourcesService.save(resource);
+		return "forward:toResourceListPage";
+	}
+
+	@RequestMapping(value = "/toEditResourcePage")
+	public String toEditResourcePage(@RequestParam("id") Integer id, Model model) {
+		Resource resource = resourcesService.get(id);
 		model.addAttribute("resource", resource);
-		return "userList";
+		return "toEditResourcePage";
+	}
+
+	@RequestMapping(value = "/editResource", method = RequestMethod.POST)
+	public String editResource(Resource resource) throws UnsupportedEncodingException {
+		resourcesService.updateResource(resource);
+		return "forward:toResourceListPage";
+	}
+
+	@RequestMapping(value = "/deleteResource")
+	public @ResponseBody void deleteResource(Integer id, HttpServletResponse res) {
+		resourcesService.deleteLogic(id);
+		String jsonStr = "{\"result\" : \"success\"}";
+
+		System.out.println("jsonStr:" + jsonStr);
+		PrintWriter pw = null;
+		try {
+			pw = res.getWriter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pw.print(jsonStr);
+		pw.flush();
+		pw.close();
 	}
 
 }
