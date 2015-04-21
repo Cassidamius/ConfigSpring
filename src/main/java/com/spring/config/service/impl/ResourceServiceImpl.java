@@ -38,6 +38,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, Integer> impl
 		map.put("name", resource.getName());
 		map.put("rescType", resource.getRescType());
 		map.put("rescString", resource.getRescString());
+		map.put("id", resource.getId());
+		map.put("version", resource.getVersion());
 		return resourceDao.update(hql, map);
 	}
 

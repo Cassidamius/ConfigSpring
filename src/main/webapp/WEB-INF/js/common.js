@@ -2,8 +2,8 @@ function searchList() {
 	$("#searchForm").submit();
 }
 
-function toEditPage(url, id) {
-	$("#searchForm").attr("action", url + "/" + id);
+function toEditPage(url) {
+	$("#searchForm").attr("action", url);
 	$("#searchForm").submit();
 }
 

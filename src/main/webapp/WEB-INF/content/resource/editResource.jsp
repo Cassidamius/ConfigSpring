@@ -19,6 +19,10 @@
 					<form:options items="${rescTypes}" itemLabel="descn"
 						itemValue="code" />
 				</form:select></td>
+				</tr>
+				<tr>
+				<td>资源</td>
+				<td><form:input path="rescString"/></td>
 			<td>描述：</td>
 			<td><form:input path="descn" /></td>
 		</tr>

@@ -91,7 +91,7 @@ public class ResourceController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		pw.print("{\"result\" : \"success\"}");
+		pw.print("{\"result\" : \"delete success.\"}");
 		pw.flush();
 		pw.close();
 	}

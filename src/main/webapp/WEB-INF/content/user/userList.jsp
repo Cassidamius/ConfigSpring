@@ -53,7 +53,7 @@ function deleteItem(url, id) {
 		</tr>
 		<c:forEach var="item" items="${pageResultSet.list}" varStatus="statu" begin="0">
 			<tr>
-				<td><input type="button" name="modify" value="修改" onclick="toEditPage('${pageContext.request.contextPath}/toEditUserPage', '${item.id}');"/>&nbsp;&nbsp;
+				<td><input type="button" name="modify" value="修改" onclick="toEditPage('${pageContext.request.contextPath}/toEditUserPage/${item.id}');"/>&nbsp;&nbsp;
 				<input type="button" name="delete" value="删除" onclick="deleteItem('${pageContext.request.contextPath}/deleteUser', '${item.id}');"/></td>
 				<td><c:out value="${item.userName}" /></td>
 				<td><c:out value="${item.nickName}" /></td>
