@@ -3,7 +3,7 @@ function searchList() {
 }
 
 function toEditPage(url, id) {
-	$("#searchForm").attr("action", url + "?id=" + id);
+	$("#searchForm").attr("action", url + "/" + id);
 	$("#searchForm").submit();
 }
 
@@ -18,6 +18,10 @@ function changePage(currentPage, totalRow) {
 function toAddPage(url) {
 	$("#searchForm").attr("action", url);
 	$("#searchForm").submit();
+}
+
+function add() {
+	$("#addForm").submit();
 }
 
 function edit() {

@@ -18,6 +18,8 @@ div.error {
     <div class="error">
       ${requestScope['SPRING_SECURITY_403_EXCEPTION'].message}
     </div>
+    <br/>
+    <a id="logout" href="${pageContext.request.contextPath}/logout">安全退出</a>
     <hr>
   </body>
 </html>

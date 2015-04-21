@@ -1,7 +1,9 @@
 package com.spring.config.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,55 +24,56 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, Integer> impl
 
 	@Autowired
 	private ResourceDao resourceDao;
-	
+
 	public ResourceServiceImpl() {
-	    super(Resource.class);
-    }
-	
+		super(Resource.class);
+	}
+
 	@DataSourceType(Constant.MASTER_DATASOURCE_KEY)
 	public Integer updateResource(Resource resource) {
-		List<Object> objList = new ArrayList<Object>();
-		String hql = "update Resource t set t.name = ?, t.rescType = ?, t.rescString = ?, "
-		        + " t.version = t.version + 1, t.updateTime = current_timestamp where t.id = ? and t.version = ?";
-		objList.add(resource.getName());
-		objList.add(resource.getRescType());
-		objList.add(resource.getRescString());
-		return resourceDao.update(hql, objList);
+		Map<String, Object> map = new HashMap<String, Object>();
+		String hql = "update Resource t set t.name = :name, t.rescType = :rescType, t.rescString = :rescString, "
+		        + " t.version = t.version + 1, t.updateTime = current_timestamp "
+		        + " where t.id = :id and t.version = :version";
+		map.put("name", resource.getName());
+		map.put("rescType", resource.getRescType());
+		map.put("rescString", resource.getRescString());
+		return resourceDao.update(hql, map);
 	}
 
 	@Override
 	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-    public PageResultSet<Resource> queryForPage(Resource condition, int pageSize, int currentPage) {
-		String hql = "SELECT count(id) FROM Resource r where 1 = 1 ";
-        List<Object> objList = new ArrayList<Object>();
-        int totalRow = resourceDao.queryRowCount(createHql(hql, condition, objList), objList);
-        List<Resource> resources = null;
-        PageInfo pageInfo = new PageInfo(totalRow, pageSize, currentPage);
-        if (totalRow == 0) {
-            resources = new ArrayList<Resource>();
-        } else {
-            hql = "FROM Resource r where deleteFlag = 1 ";
-            objList.clear();
-            resources = resourceDao.queryForPage(createHql(hql, condition, objList), objList, pageInfo.countOffset(),
-                    pageInfo.getPageSize());
-        }
+	public PageResultSet<Resource> queryForPage(Resource condition, int pageSize, int currentPage) {
+		String hql = "SELECT count(id) FROM Resource r where r.deleteFlag = 1 ";
+		Map<String, Object> map = new HashMap<String, Object>();
+		int totalRow = resourceDao.queryRowCount(createHql(hql, condition, map), map);
+		List<Resource> resources = null;
+		PageInfo pageInfo = new PageInfo(totalRow, pageSize, currentPage);
+		if (totalRow == 0) {
+			resources = new ArrayList<Resource>();
+		} else {
+			hql = "FROM Resource r where deleteFlag = 1 ";
+			map.clear();
+			resources = resourceDao.queryForPage(createHql(hql, condition, map), map, pageInfo.countOffset(),
+			        pageInfo.getPageSize());
+		}
 
-        return new PageResultSet<Resource>(pageInfo, resources);
-    }
+		return new PageResultSet<Resource>(pageInfo, resources);
+	}
 
-    private String createHql(String hql, Resource resource, List<Object> objList) {
-        StringBuffer sb = new StringBuffer(hql);
-        if (resource != null) {
-            if (StringUtils.isNotEmpty(resource.getName())) {
-                sb.append(" and r.name like ? ");
-                objList.add("%" + resource.getName() + "%");
-            }
-            if (StringUtils.isNotEmpty(resource.getRescString())) {
-                sb.append(" and r.rescString like ? ");
-                objList.add("%" + resource.getRescString() + "%");
-            }
-        }
-        return sb.toString();
-    }
+	private String createHql(String hql, Resource resource, Map<String, Object> map) {
+		StringBuffer sb = new StringBuffer(hql);
+		if (resource != null) {
+			if (StringUtils.isNotEmpty(resource.getName())) {
+				sb.append(" and r.name like :name ");
+				map.put("name", "%" + resource.getName() + "%");
+			}
+			if (StringUtils.isNotEmpty(resource.getRescString())) {
+				sb.append(" and r.rescString like :rescString ");
+				map.put("rescString", "%" + resource.getRescString() + "%");
+			}
+		}
+		return sb.toString();
+	}
 
 }

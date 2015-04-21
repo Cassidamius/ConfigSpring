@@ -3,7 +3,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <script language="javascript" type="text/javascript" src="js/jquery/jquery-1.10.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="js/common.js"></script>
-
+<script>
+function deleteItem(url, id) {
+	$.ajax({
+		url : url,
+		data : {id : id, _csrf : $("#_csrf").val()},
+		dataType : "json",
+		type : "post",
+		success : function(data) {
+			alert(data.result);
+			searchList();
+		}
+	});
+}
+</script>
 <h2>用户列表</h2>
 <form id="searchForm" method="post" action="${pageContext.request.contextPath}/findUserList">
 	<table>
@@ -21,7 +34,7 @@
 			</td>
 		</tr>
 	</table>
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	<input type="hidden" name="${_csrf.parameterName}" id="${_csrf.parameterName}" value="${_csrf.token}" />
 	<input type="hidden" name="pageInfo.currentPage" id="currentPage"
 		value="${pageResultSet.pageInfo.currentPage}"> <input type="hidden" name="pageInfo.pageSize"
 		id="pageSize" value="${pageResultSet.pageInfo.pageSize}"> <input type="hidden"

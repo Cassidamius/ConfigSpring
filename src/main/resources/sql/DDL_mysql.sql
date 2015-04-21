@@ -89,3 +89,16 @@ delete_flag int default 1 not null comment '删除标记：0：已删除　1：�
 create_time timestamp default current_timestamp not null comment '创建时间',
 update_time timestamp default current_timestamp not null comment '更新时间'
 ) comment '操作日志';
+
+drop table if exists t_dict;
+create table t_dict(
+id int not null auto_increment primary key,
+dict_key varchar(100),
+dict_key_desc varchar(100),
+code varchar(100),
+descn varchar(100),
+version int not null comment '版本',
+delete_flag int default 1 not null comment '删除标记：0：已删除　1：正常',
+create_time timestamp default current_timestamp not null comment '创建时间',
+update_time timestamp default current_timestamp not null comment '更新时间'
+) comment '字典表';

@@ -1,6 +1,7 @@
 package com.spring.config.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
@@ -19,13 +20,13 @@ public interface BaseDao<T extends BaseEntity, ID> {
     
     T load(ID id);
 
-    Object getObjectByHql(String hql, List<Object> args);
+    Object getObjectByHql(String hql, Map<String, Object> map);
     
     @SuppressWarnings("rawtypes")
-    List getListBySql(String sql, List<Object> args);
+    List getListBySql(String sql, Map<String, Object> map);
 
     @SuppressWarnings("rawtypes")
-    List getListByHql(String hql, List<Object> args);
+    List getListByHql(String hql, Map<String, Object> map);
 
     List<T> list();
     
@@ -35,7 +36,7 @@ public interface BaseDao<T extends BaseEntity, ID> {
 
     void saveOrUpdate(T t);
     
-    Integer update(String hql, List<Object> objList);
+    Integer update(String hql, Map<String, Object> map);
 
     void delete(ID id);
     
@@ -61,7 +62,7 @@ public interface BaseDao<T extends BaseEntity, ID> {
      * @param hql
      * @return
      */
-    int queryRowCount(String hql, List<Object> objList);
+    int queryRowCount(String hql, Map<String, Object> map);
 
     /**
      * 翻页查询
@@ -73,6 +74,6 @@ public interface BaseDao<T extends BaseEntity, ID> {
      */
     List<T> queryForPage(String hql, int beginIndex, int pageSize);
     
-    List<T> queryForPage(String hql, List<Object> objs, int beginIndex, int pageSize);
+    List<T> queryForPage(String hql, Map<String, Object> map, int beginIndex, int pageSize);
 
 }
