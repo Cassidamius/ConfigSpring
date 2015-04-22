@@ -34,6 +34,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 @DynamicUpdate
 public class UserInfo extends BaseEntity implements UserDetails {
 
+	public UserInfo() {
+
+	}
+
+	public UserInfo(Integer id, String userName, String nickName, String namePinyin, String address, String telephone,
+	        Date birthday, String mobile, String descn, Integer version) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.nickName = nickName;
+		this.namePinyin = namePinyin;
+		this.address = address;
+		this.telephone = telephone;
+		this.birthday = birthday;
+		this.mobile = mobile;
+		this.descn = descn;
+		this.version = version;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

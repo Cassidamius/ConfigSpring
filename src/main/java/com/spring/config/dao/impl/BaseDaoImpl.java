@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 
 import com.spring.config.dao.BaseDao;
 import com.spring.config.model.BaseEntity;
@@ -169,7 +170,7 @@ public class BaseDaoImpl<T extends BaseEntity, ID extends Serializable> implemen
 
 	@SuppressWarnings("unchecked")
 	public List<T> list() {
-		return getSession().createCriteria(entity).list();
+		return getSession().createCriteria(entity).addOrder(Order.asc("id")).list();
 	}
 
 }

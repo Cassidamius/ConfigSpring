@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.10.1.min.js"></script>
-<script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
+<script language="javascript" type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery/jquery-1.10.1.min.js"></script>
+<script language="javascript" type="text/javascript"
+	src="${pageContext.request.contextPath}/js/common.js"></script>
 <h2>编辑用户</h2>
-<form:form id="editForm" commandName="userInfo" method="post" action="${pageContext.request.contextPath}/editUserInfo">
-    <form:hidden path="id"/>
+<form:form id="editForm" commandName="userInfo" method="put" action="${pageContext.request.contextPath}/user/${id}">
     <form:hidden path="version"/>
 	<table>
 		<tr>
@@ -43,7 +44,7 @@
 		</table>
 		</tr>
 		<tr>
-			<td colspan="6"><input type="button" value="修改" onclick="edit();" /></td>
+			<td colspan="6"><input type="submit" value="修改" /></td>
 		</tr>
 	</table>
 </form:form>

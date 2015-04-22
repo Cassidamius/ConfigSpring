@@ -18,6 +18,9 @@
     <definition name="toEditUserPage" extends=".base">
         <put-attribute name="body" value="/WEB-INF/content/user/editUser.jsp" />
     </definition>
+    <definition name="detail" extends=".base">
+        <put-attribute name="body" value="/WEB-INF/content/user/userDetail.jsp" />
+    </definition>
     <!-- user model end -->
     
     <!-- role model start -->

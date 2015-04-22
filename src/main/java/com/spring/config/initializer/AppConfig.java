@@ -15,4 +15,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import({ HibernateConfig.class })
 public class AppConfig {
 	
+	public AppConfig() {
+		System.out.println("-------------------AppConfig---------------------");
+	}
+	
 }

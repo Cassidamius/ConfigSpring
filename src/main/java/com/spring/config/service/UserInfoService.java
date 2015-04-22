@@ -17,6 +17,8 @@ public interface UserInfoService extends PageService<UserInfo, Integer> {
     UserInfo getUserInfo(String name, String password);
 
     UserInfo getUserInfo(String name);
+    
+    UserInfo getUserInfoById(Integer id);
 
     List<String> getNickNameList();
     

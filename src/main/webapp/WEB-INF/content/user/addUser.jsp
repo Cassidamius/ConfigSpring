@@ -4,7 +4,7 @@
 <script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.10.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
 <h2>新增用户</h2>
-<form:form id="addForm" commandName="userInfo" ENCTYPE="application/x-www-form-urlencoded" method="post" action="${pageContext.request.contextPath}/addUserInfo">
+<form:form id="addForm" commandName="userInfo" ENCTYPE="application/x-www-form-urlencoded" method="post" action="${pageContext.request.contextPath}/user/save">
 	<table>
 		<tr>
 			<td>用户名：</td>

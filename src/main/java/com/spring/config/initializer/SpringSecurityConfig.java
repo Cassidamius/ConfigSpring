@@ -80,6 +80,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	        + " on r.id = rr.role_id join t_resc re on re.id = rr.resc_id order by re.priority";
 
 	public SpringSecurityConfig() {
+		System.out.println("-----------------------SpringSecurityConfig------------------------");
 	}
 
 	/**

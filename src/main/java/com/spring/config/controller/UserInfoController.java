@@ -2,13 +2,13 @@ package com.spring.config.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.spring.config.model.Role;
 import com.spring.config.model.UserInfo;
@@ -28,7 +29,8 @@ import com.spring.config.util.MD5Util;
 
 @Controller
 @Scope("prototype")
-public class UserInfoController {
+@RequestMapping(value = "/user")
+public class UserInfoController extends MultiActionController {
 
 	@Autowired
 	private UserInfoService userInfoService;
@@ -36,14 +38,41 @@ public class UserInfoController {
 	@Autowired
 	private RoleService roleService;
 
-	// @RequestMapping(value = "/getUserInfoById/{id}", method =
-	// RequestMethod.GET)
-	// public String getUserInfoById(@PathVariable Integer id, Model model) {
-	// return "forward:toEditUserPage/" + id;
-	// }
+	@RequestMapping
+	public String search(Model model) {
+		model.addAttribute("userInfo", new UserInfo());
+		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
+		return "userList";
+	}
 
-	@RequestMapping(value = "/addUserInfo", method = RequestMethod.POST)
-	public String addUserInfo(UserInfo userInfo/* , Model model */) {
+	@RequestMapping(value = "/list",method=RequestMethod.POST)
+	public String list(UserInfo userInfo, PageResultSet<UserInfo> pageResultSet, Model model) {
+		if (pageResultSet == null) {
+			pageResultSet = new PageResultSet<UserInfo>();
+		}
+		model.addAttribute("userInfo", userInfo);
+		pageResultSet = userInfoService.queryForPage(userInfo, pageResultSet.getPageInfo().getPageSize(), pageResultSet
+		        .getPageInfo().getCurrentPage());
+		model.addAttribute("pageResultSet", pageResultSet);
+		return "userList";
+	}
+
+	/**
+	 * add这个方法可能会被maxthon浏览器当做广告链接过滤掉,因为包含ad字符
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/add",method=RequestMethod.POST)
+	public String add(Model model) {
+		model.addAttribute("userInfo", new UserInfo());
+		List<Role> roles = roleService.list();
+		model.addAttribute("roles", roles);
+		return "toAddUserPage";
+	}
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String save(UserInfo userInfo) {
 		userInfo.setDeleteFlag(1);
 		String salt = UUID.randomUUID().toString();
 		userInfo.setSalt(salt);
@@ -54,26 +83,17 @@ public class UserInfoController {
 		userInfo.setRoles(roles);
 		userInfo.setPassword(MD5Util.MD5(userInfo.getUserName() + "{" + salt + "}"));
 		userInfoService.save(userInfo);
-		// model.addAttribute("userInfo", userInfo);
-		return "forward:toUserListPage";
+		return "redirect:/user";
 	}
 
-	@RequestMapping(value = "/toAddUserPage")
-	public String toAddUserPage(Model model) {
-		model.addAttribute("userInfo", new UserInfo());
-		List<Role> roles = roleService.list();
-		model.addAttribute("roles", roles);
-		return "toAddUserPage";
-	}
-
-	@RequestMapping(value = "/toEditUserPage/{id}")
-	public String toEditUserPage(@PathVariable Integer id, Model model) {
-		UserInfo userInfo = userInfoService.get(id);
+	@RequestMapping(value = "/{id}/edit")
+	public String edit(@PathVariable Integer id, Model model) {
+		UserInfo userInfo = userInfoService.getUserInfoById(id);
 		model.addAttribute("userInfo", userInfo);
-		
-		List<Role> roles = roleService.getRoleSetByUserId(id);
+
+		List<Role> roles = roleService.getRoleListByUserId(id);
 		List<Role> allRoles = roleService.list();
-		Map<Role, Integer> rolesMap = new HashMap<Role, Integer>();
+		Map<Role, Integer> rolesMap = new LinkedHashMap<Role, Integer>();
 		for (Role role : allRoles) {
 			for (Role r : roles) {
 				if (r.getId() == role.getId()) {
@@ -89,8 +109,18 @@ public class UserInfoController {
 		return "toEditUserPage";
 	}
 
-	@RequestMapping(value = "/deleteUser/{id}")
-	public void deleteUser(@PathVariable Integer id, HttpServletResponse res) {
+	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	public String update(@PathVariable Integer id,HttpServletRequest request) throws Exception {
+		UserInfo userInfo = userInfoService.get(id);
+		bind(request, userInfo);
+		List<Role> roleList = roleService.getRoleListByRoleIds(userInfo.getRoleIds());
+		userInfo.setRoles(roleList);
+		userInfoService.update(userInfo);
+		return "redirect:/user";
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public void delete(@PathVariable Integer id, HttpServletResponse res) {
 		userInfoService.deleteLogic(id);
 		PrintWriter pw = null;
 		try {
@@ -98,36 +128,18 @@ public class UserInfoController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		pw.print("{\"result\" : \"success\"}");
+		pw.print("{\"result\" : \"delete success.\"}");
 		pw.flush();
 		pw.close();
 	}
-
-	@RequestMapping(value = "/toUserListPage")
-	public String toUserListPage(Model model) {
-		model.addAttribute("userInfo", new UserInfo());
-		model.addAttribute("pageResultSet", new PageResultSet<UserInfo>());
-		return "userList";
-	}
-
-	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-	public String editUser(UserInfo userInfo) throws UnsupportedEncodingException {
-		List<Role> roleList = roleService.getRoleListByRoleIds(userInfo.getRoleIds());
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public String detail(@PathVariable Integer id, Model model) {
+		UserInfo userInfo = userInfoService.getUserInfoById(id);
+		List<Role> roleList = roleService.getRoleListByUserId(userInfo.getId());
 		userInfo.setRoles(roleList);
-		userInfoService.updateUserInfo(userInfo);
-		return "forward:toUserListPage";
-	}
-
-	@RequestMapping(value = "/findUserList")
-	public String findUserList(UserInfo userInfo, PageResultSet<UserInfo> pageResultSet, Model model) {
-		if (pageResultSet == null) {
-			pageResultSet = new PageResultSet<UserInfo>();
-		}
 		model.addAttribute("userInfo", userInfo);
-		pageResultSet = userInfoService.queryForPage(userInfo, pageResultSet.getPageInfo().getPageSize(), pageResultSet
-		        .getPageInfo().getCurrentPage());
-		model.addAttribute("pageResultSet", pageResultSet);
-		return "userList";
+		return "detail";
 	}
 
 }

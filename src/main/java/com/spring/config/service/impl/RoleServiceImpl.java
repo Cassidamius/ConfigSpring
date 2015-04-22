@@ -91,8 +91,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Integer> implements R
 
 	@SuppressWarnings("unchecked")
 	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
-	public List<Role> getRoleSetByUserId(Integer userId) {
-		String hql = "select new Role(r.id, r.name, r.roleDesc,r.version) from Role r, UserRole ur where ur.userId = :userId and ur.roleId = r.id";
+	public List<Role> getRoleListByUserId(Integer userId) {
+		String hql = "select new Role(r.id, r.name, r.roleDesc,r.version) from Role r, "
+		        + " UserRole ur where ur.userId = :userId and ur.roleId = r.id order by r.id";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		List<Role> roleList = roleDao.getListByHql(hql, map);

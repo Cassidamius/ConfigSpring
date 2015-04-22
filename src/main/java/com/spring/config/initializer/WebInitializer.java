@@ -3,6 +3,7 @@ package com.spring.config.initializer;
 import javax.servlet.Filter;
 
 import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.spring.config.filter.ContextFilter;
@@ -26,7 +27,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { MvcConfig.class};
+//		return new Class[] { MvcConfig.class};
+		return null;
 	}
 
 	/**
@@ -39,7 +41,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 	@Override
 	protected Filter[] getServletFilters() {
-		
+		HiddenHttpMethodFilter hhm = new HiddenHttpMethodFilter();
 //		CharacterEncodingFilter cef = new CharacterEncodingFilter();
 //		cef.setEncoding("UTF-8");
 //		cef.setForceEncoding(true);
@@ -48,7 +50,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		// OpenSessionInViewFilter
 //		OpenSessionInViewFilter osivf = new OpenSessionInViewFilter();
 //		osivf.setSessionFactoryBeanName("sessionFactory");
-		Filter[] filters = new Filter[] { /*cef,*/ cf/*, osivf*/ };
+		Filter[] filters = new Filter[] { /*cef,*/ cf/*, osivf*/,hhm };
 		return filters;
 	}
 

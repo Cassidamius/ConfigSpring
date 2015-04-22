@@ -8,7 +8,7 @@ public interface RoleService extends PageService<Role, Integer> {
 	
 	Role getRole(int id);
 	
-	List<Role> getRoleSetByUserId(Integer userId);
+	List<Role> getRoleListByUserId(Integer userId);
 	
 	List<Role> getRoleListByRoleIds(List<Integer> roleIds);
 	

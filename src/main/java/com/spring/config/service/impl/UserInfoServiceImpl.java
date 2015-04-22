@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,11 +107,16 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
 
 	@DataSourceType(Constant.SLAVE_DATASOURCE_KEY)
 	public UserInfo getUserInfo(String name) {
-		Criteria c = userInfoDao.getSession().createCriteria(UserInfo.class);
-		c.add(Restrictions.eq("userName", name));
-		c.setFetchMode("roles", FetchMode.JOIN);
-		UserInfo ui = (UserInfo) c.uniqueResult();
-		return ui;
+		return (UserInfo) userInfoDao.getSession().createCriteria(UserInfo.class)
+		        .add(Restrictions.eq("userName", name)).setFetchMode("roles", FetchMode.JOIN).uniqueResult();
+	}
+
+	public UserInfo getUserInfoById(Integer id) {
+		String hql = "select new UserInfo( id, userName, nickName, namePinyin, address, telephone, "
+		        + " birthday, mobile, descn, version) from UserInfo where id = :id";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		return (UserInfo) userInfoDao.getObjectByHql(hql, map);
 	}
 
 	@Override
